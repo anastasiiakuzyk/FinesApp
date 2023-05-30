@@ -1,0 +1,111 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp' version "1.8.0-1.0.9"
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    namespace 'ua.anastasiia.finesapp'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "ua.anastasiia.finesapp"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        buildConfigField "String", "TOKEN", "\"${properties.getProperty("TOKEN")}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_compiler_version
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+kotlin {
+    jvmToolchain(8)
+}
+
+dependencies {
+
+    implementation 'androidx.activity:activity-compose:1.6.1'
+    implementation "androidx.compose.material:material"
+    implementation "androidx.compose.material:material-icons-extended"
+    implementation "com.github.skydoves:landscapist-coil:1.4.1"
+
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-tooling"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+
+    // Import the Compose BOM
+    implementation platform('androidx.compose:compose-bom:2023.01.00')
+
+    // Dagger Hilt
+    implementation "androidx.hilt:hilt-navigation-compose:$hilt_version"
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-compiler:2.44")
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+    // parsing kotlin annotations
+    ksp "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.7.2"
+
+    // Camera
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation 'androidx.camera:camera-view:1.3.0-alpha06'
+
+    // Permissions
+    implementation "com.google.accompanist:accompanist-permissions:0.23.1"
+    implementation "io.coil-kt:coil-compose:1.3.2"
+
+    // Google Maps
+    implementation 'com.google.maps.android:maps-compose:2.7.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+}
