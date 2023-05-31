@@ -67,13 +67,3 @@ fun FineWithCarAndViolations.toFineDetails(): FineDetails = FineDetails(
     sum = this.violations.sumOf { violation -> violation.price }
 )
 
-
-fun FineDetails.toFine(): Fine =
-    Fine(
-        fine_id = id,
-        location = location,
-        date = date,
-        imageUri = imageUri.toString(),
-        car_id = car_id
-    )
-

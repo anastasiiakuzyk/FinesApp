@@ -20,7 +20,6 @@ class AppModules {
 
     @Provides
     fun provideRetrofit(): Retrofit {
-
         val baseUrl = "https://api.platerecognizer.com/v1/"
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 

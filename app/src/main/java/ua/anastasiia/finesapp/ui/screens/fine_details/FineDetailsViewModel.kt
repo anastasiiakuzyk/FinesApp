@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ua.anastasiia.finesapp.data.FineRepository
-import ua.anastasiia.finesapp.ui.screens.FineDetails
-import ua.anastasiia.finesapp.ui.screens.toFine
+import ua.anastasiia.finesapp.ui.screens.FineDetails import ua.anastasiia.finesapp.ui.screens.toFineWithCarAndViolations
 import javax.inject.Inject
 
 /**
@@ -56,7 +55,7 @@ class FineDetailsViewModel @Inject constructor(
      * Deletes the fine from the [FineRepository]'s data source.
      */
     suspend fun deleteFine() {
-        fineRepository.deleteFine(uiState.value.toFine())
+        fineRepository.deleteFine(uiState.value.toFineWithCarAndViolations())
     }
 
     companion object {

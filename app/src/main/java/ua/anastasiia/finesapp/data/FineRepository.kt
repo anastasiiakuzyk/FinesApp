@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import ua.anastasiia.finesapp.data.dao.CarInfoDao
 import ua.anastasiia.finesapp.data.dao.FineDao
 import ua.anastasiia.finesapp.data.dao.FineViolationCrossRefDao
+import ua.anastasiia.finesapp.data.dao.ViolationDao
 import ua.anastasiia.finesapp.data.entity.CarInfo
 import ua.anastasiia.finesapp.data.entity.Fine
 import ua.anastasiia.finesapp.data.entity.FineViolationCrossRef
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 class FineRepository @Inject constructor(
     private val carInfoDao: CarInfoDao,
     private val fineDao: FineDao,
+    private val violationDao: ViolationDao,
     private val fineViolationCrossRefDao: FineViolationCrossRefDao
 ) {
 
@@ -73,8 +75,8 @@ class FineRepository @Inject constructor(
         return fineDao.getFineWithCarInfoAndViolationsById(fineId)
     }
 
-    suspend fun deleteFine(fine: Fine) {
-        fineDao.delete(fine)
+    suspend fun deleteFine(fineWithCarAndViolations: FineWithCarAndViolations) {
+        fineDao.delete(fineWithCarAndViolations.fine)
     }
 
     @Transaction
