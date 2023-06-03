@@ -32,13 +32,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.skydoves.landscapist.coil.CoilImage
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
 import ua.anastasiia.finesapp.FinesTopAppBar
 import ua.anastasiia.finesapp.R
@@ -56,6 +59,7 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToFineEntry: () -> Unit,
+    navigateToMarkers: () -> Unit,
     navigateToFineUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
@@ -66,7 +70,8 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             FinesTopAppBar(
-                title = stringResource(HomeDestination.titleRes), canNavigateBack = false
+                title = stringResource(HomeDestination.titleRes), canNavigateBack = false,
+                navigateToMarkers = navigateToMarkers
             )
         },
         floatingActionButton = {
@@ -148,6 +153,19 @@ private fun Fine(
                 contentDescription = stringResource(R.string.captured_image),
                 contentScale = ContentScale.Crop
             )
+//            CoilImage(
+//                modifier = Modifier
+//                    .size(100.dp)
+//                    .clip(CircleShape)
+//                    .border(width = 2.dp, color = Color.Black, shape = CircleShape),
+//                imageModel = fine.fine.imageUri,
+//                // Crop, Fit, Inside, FillHeight, FillWidth, None
+//                contentScale = ContentScale.Crop,
+//                error = ImageBitmap.imageResource(R.drawable.breaking_news),
+//                // shows a placeholder ImageBitmap when loading.
+//                placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
+//            )
+
             Text(
                 text = fine.carInfo.plate, fontWeight = FontWeight.Bold
             )

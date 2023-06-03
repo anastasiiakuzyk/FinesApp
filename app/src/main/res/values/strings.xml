@@ -38,4 +38,5 @@
     <string name="important_permission">This permission is important for this app. Please grant the permission.</string>
     <string name="permission_request">Permission request</string>
     <string name="ok">OK</string>
+    <string name="markers">Markers</string>
 </resources>

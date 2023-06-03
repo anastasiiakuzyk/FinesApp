@@ -7,6 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,12 +26,14 @@ fun FinesApp(navController: NavHostController = rememberNavController()) {
 /**
  * App bar to display title and conditionally display the back navigation.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinesTopAppBar(
     title: String,
     canNavigateBack: Boolean,
     modifier: Modifier = Modifier,
-    navigateUp: () -> Unit = {}
+    navigateUp: () -> Unit = {},
+    navigateToMarkers: () -> Unit = {}
 ) {
     if (canNavigateBack) {
         TopAppBar(
@@ -45,6 +49,17 @@ fun FinesTopAppBar(
             }
         )
     } else {
-        TopAppBar(title = { Text(title) }, modifier = modifier)
+        TopAppBar(
+            title = { Text(title) },
+            modifier = modifier,
+            actions = {
+                IconButton(onClick = navigateToMarkers) {
+                    Icon(
+                        imageVector = Filled.Map,
+                        contentDescription = stringResource(R.string.markers)
+                    )
+                }
+            }
+        )
     }
 }

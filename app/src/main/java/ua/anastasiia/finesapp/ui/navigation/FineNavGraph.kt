@@ -15,6 +15,8 @@ import ua.anastasiia.finesapp.ui.screens.fine_details.FineDetailsScreen
 import ua.anastasiia.finesapp.ui.screens.fine_edit.FineEditDestination
 import ua.anastasiia.finesapp.ui.screens.fine_edit.FineEditScreen
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineEntryScreen
+import ua.anastasiia.finesapp.ui.screens.markers.MarkersDestination
+import ua.anastasiia.finesapp.ui.screens.markers.MarkersScreen
 
 /**
  * Provides Navigation graph for the application.
@@ -34,7 +36,17 @@ fun FineNavHost(
                 navigateToFineEntry = { navController.navigate(FineEntryDestination.route) },
                 navigateToFineUpdate = {
                     navController.navigate("${FineDetailsDestination.route}/${it}")
+                },
+                navigateToMarkers = {
+                    navController.navigate(MarkersDestination.route)
                 }
+            )
+        }
+        composable(
+            route = MarkersDestination.route
+        ) {
+            MarkersScreen(
+                navigateBack = { navController.navigateUp() }
             )
         }
         composable(route = FineEntryDestination.route) {
