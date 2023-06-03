@@ -1,5 +1,6 @@
 package ua.anastasiia.finesapp.ui.screens.fine_entry
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +50,7 @@ import ua.anastasiia.finesapp.ui.screens.LocationMap
 import ua.anastasiia.finesapp.ui.screens.fine_details.DeleteConfirmationDialog
 import ua.anastasiia.finesapp.util.getFileFromUri
 import ua.anastasiia.finesapp.web.model.Results
+import java.io.File
 
 @OptIn(
     ExperimentalCoilApi::class, ExperimentalPermissionsApi::class, ExperimentalCoroutinesApi::class
@@ -127,12 +129,18 @@ fun FineInputForm(
                         GallerySelect(modifier = modifier, onImageUri = { uri ->
                             showGallerySelect = false
                             imageUri = uri
+                            Log.d("imageUriG", imageUri.toString())
                             carViewModel.getResultsFromFile(context.getFileFromUri(imageUri))
                         })
                     } else {
                         Box(modifier = modifier) {
-                            CameraCapture(modifier = modifier, onImageFile = { file ->
+                            CameraCapture(
+                                modifier = modifier,
+                                onImageFile = { file ->
+//                                Log.e("file.str", file.toString())
+//                                imageUri = file
                                 imageUri = file.toUri()
+//                                carViewModel.getResultsFromFile(file)
                                 carViewModel.getResultsFromFile(context.getFileFromUri(imageUri))
                             })
                             Button(modifier = Modifier
