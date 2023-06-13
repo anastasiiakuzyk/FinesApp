@@ -31,7 +31,6 @@ fun MarkersScreen(
     val markers: ArrayList<LatLng> = arrayListOf()
 
     val geocoder = Geocoder(LocalContext.current, Locale.getDefault());
-
     homeUiState.fineList.forEach {
         val addressList = geocoder.getFromLocationName(it.fine.location, 1);
         val address = addressList?.get(0)

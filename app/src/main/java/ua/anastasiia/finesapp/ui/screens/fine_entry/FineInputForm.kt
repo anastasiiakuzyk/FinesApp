@@ -1,6 +1,7 @@
 package ua.anastasiia.finesapp.ui.screens.fine_entry
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -99,6 +100,12 @@ fun FineInputForm(
                                         imageUri = imageUri
                                     )
                                 )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.resources.getString(R.string.noResults),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }) {
                             Text(stringResource(R.string.fill))
@@ -163,7 +170,10 @@ fun FineInputForm(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                LocationMap(viewModel = viewModel)
+                LocationMap(
+                    viewModel = viewModel,
+                    location = fineDetails.location
+                )
                 val locationValue = if (isViewMode) viewModel.location else fineDetails.location
                 OutlinedTextField(
                     value = locationValue,
@@ -270,9 +280,15 @@ fun FineInputForm(
                                         5 -> description = stringResource(R.string.sel5)
                                         6 -> description = stringResource(R.string.sel6)
                                         7 -> description = stringResource(R.string.sel7)
+                                        8 -> description = stringResource(R.string.sel8)
+                                        9 -> description = stringResource(R.string.sel9)
+                                        10 -> description = stringResource(R.string.sel10)
                                     }
 
-                                    Text(text = "$description - ${it.price}", modifier.padding(8.dp))
+                                    Text(
+                                        text = "$description - ${it.price}${stringResource(R.string.currency)}",
+                                        modifier.padding(8.dp)
+                                    )
                                     if (fineDetails.violations.size - 1 > i) Divider(
                                         modifier.padding(
                                             8.dp

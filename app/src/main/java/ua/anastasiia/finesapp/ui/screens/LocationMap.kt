@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Address
 import android.location.Geocoder
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import com.google.maps.android.compose.*
 import ua.anastasiia.finesapp.MainActivity
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineViewModel
+import ua.anastasiia.finesapp.ui.screens.markers.Markers
 import java.util.Locale
 
 
@@ -35,7 +37,8 @@ import java.util.Locale
 @Composable
 fun LocationMap(
     modifier: Modifier = Modifier,
-    viewModel: FineViewModel
+    viewModel: FineViewModel,
+    location: String
 ) {
     val multiplePermissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -67,9 +70,15 @@ fun LocationMap(
                 deviceLatLng.latitude, deviceLatLng.longitude, 1
             )
             val address: String = addresses!![0].getAddressLine(0)
-//            val address = addresses!![0]
+            if (location.isNotBlank().and(location.isNotEmpty())) {
+                Log.d("location", location)
+                val addressList = geocoder.getFromLocationName(location, 1);
+                val addres = addressList?.get(0)
+                deviceLatLng = LatLng(addres!!.latitude, addres.longitude)
+            }
+
             viewModel.updateLocation(address)
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(deviceLatLng, 18f)
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(deviceLatLng, 15f)
         }
     }
 

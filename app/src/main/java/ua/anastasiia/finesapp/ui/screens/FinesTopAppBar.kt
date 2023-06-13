@@ -53,21 +53,9 @@ fun FinesTopAppBar(
         )
     } else {
         TopAppBar(
-            title = { Text(title) },
+            title = { Text(" $title") },
             modifier = modifier,
             navigationIcon = {
-//                IconButton(
-//                    onClick = {
-//                        AppCompatDelegate.setApplicationLocales(
-//                            LocaleListCompat.forLanguageTags("uk")
-//                        )
-//                    }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Language,
-//                        contentDescription = stringResource(R.string.changeToUk)
-//                    )
-//                }
                 LocaleDropdownMenu()
             },
             actions = {

@@ -38,16 +38,6 @@ fun MultiComboBox(
     var expanded by remember { mutableStateOf(false) }
     val options: List<Violation> = Violations.violations
 
-    val optionsLocal: List<Violation> = listOf(
-        Violation(options[0].violation_id, stringResource(R.string.sel1), options[0].price),
-        Violation(options[1].violation_id, stringResource(R.string.sel2), options[1].price),
-        Violation(options[2].violation_id, stringResource(R.string.sel3), options[2].price),
-        Violation(options[3].violation_id, stringResource(R.string.sel4), options[3].price),
-        Violation(options[4].violation_id, stringResource(R.string.sel5), options[4].price),
-        Violation(options[5].violation_id, stringResource(R.string.sel6), options[5].price),
-        Violation(options[6].violation_id, stringResource(R.string.sel7), options[6].price),
-    )
-
     val isEnabled by rememberUpdatedState { options.isNotEmpty() }
 
     val selectedOptionsList = remember { mutableStateListOf<Int>() }
@@ -130,6 +120,9 @@ fun MultiComboBox(
                             5 -> description = stringResource(R.string.sel5)
                             6 -> description = stringResource(R.string.sel6)
                             7 -> description = stringResource(R.string.sel7)
+                            8 -> description = stringResource(R.string.sel8)
+                            9 -> description = stringResource(R.string.sel9)
+                            10 -> description = stringResource(R.string.sel10)
                         }
                         Text(text = "$description - ${option.price}${stringResource(R.string.currency)}")
                     }

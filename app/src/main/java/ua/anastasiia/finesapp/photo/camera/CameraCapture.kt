@@ -148,7 +148,9 @@ fun CameraCapture(
 //                                        savedFile?.let { onImageFile(it) }
 //                                        onImageFile(file)
                                         val savedUri = Uri.fromFile(file)
-                                        val msg = "Photo capture succeeded: $savedUri"
+
+                                        val msg =
+                                            "${context.resources.getString(R.string.photoCaptureSucceeded)}: $savedUri"
 //                                        val msg = "Photo capture succeeded: $savedFile"
                                         Log.d("imageuri", savedUri.toString())
                                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -162,7 +164,9 @@ fun CameraCapture(
                                             )
                                         }
                                         Toast.makeText(
-                                            context, "Something went wrong", Toast.LENGTH_SHORT
+                                            context,
+                                            context.resources.getString(R.string.somethingWentWrong),
+                                            Toast.LENGTH_SHORT
                                         ).show()
                                     }
                                 })
