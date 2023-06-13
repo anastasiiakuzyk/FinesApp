@@ -67,6 +67,7 @@ fun LocationMap(
                 deviceLatLng.latitude, deviceLatLng.longitude, 1
             )
             val address: String = addresses!![0].getAddressLine(0)
+//            val address = addresses!![0]
             viewModel.updateLocation(address)
             cameraPositionState.position = CameraPosition.fromLatLngZoom(deviceLatLng, 18f)
         }

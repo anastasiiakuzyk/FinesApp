@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import ua.anastasiia.finesapp.MainActivity
 import ua.anastasiia.finesapp.R
+import ua.anastasiia.finesapp.data.entity.Violation
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineViewModel
 import java.util.Locale
 
@@ -33,14 +34,14 @@ import java.util.Locale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationsMap(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    markersList: List<LatLng>
 ) {
     val multiplePermissionState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
         )
     )
-
     LaunchedEffect(Unit) {
         multiplePermissionState.launchMultiplePermissionRequest()
     }
@@ -77,82 +78,42 @@ fun LocationsMap(
                 properties = MapProperties(isMyLocationEnabled = true),
                 uiSettings = MapUiSettings(compassEnabled = true)
             ) {
-                Marker(
-                    state = MarkerState(position = LatLng(50.4087, 30.6284))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4090, 30.6285))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4100, 30.6270))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4078, 30.6220))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4068, 30.6284))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4095, 30.6283))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4109, 30.6272))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4088, 30.6230))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4088, 30.6284))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4091, 30.6285))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4101, 30.6270))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4079, 30.6220))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4067, 30.6284))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4096, 30.6283))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4108, 30.6272))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4081, 30.6230))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4088, 30.6231))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4088, 30.6285))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4091, 30.6282))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4101, 30.6271))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4079, 30.6221))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4067, 30.6285))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4096, 30.6284))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4108, 30.6271))
-                )
-                Marker(
-                    state = MarkerState(position = LatLng(50.4081, 30.6231))
-                )
+                for (marker in markersList) {
+                    Marker(
+                        state = MarkerState(marker)
+                    )
+                }
             }
         }
     }
+}
+
+object Markers {
+    val markers = listOf(
+        LatLng(50.4087, 30.6284),
+        LatLng(50.4090, 30.6285),
+        LatLng(50.4100, 30.6270),
+        LatLng(50.4078, 30.6220),
+        LatLng(50.4068, 30.6284),
+        LatLng(50.4095, 30.6283),
+        LatLng(50.4109, 30.6272),
+        LatLng(50.4088, 30.6230),
+        LatLng(50.4088, 30.6284),
+        LatLng(50.4091, 30.6285),
+        LatLng(50.4101, 30.6270),
+        LatLng(50.4079, 30.6220),
+        LatLng(50.4067, 30.6284),
+        LatLng(50.4096, 30.6283),
+        LatLng(50.4108, 30.6272),
+        LatLng(50.4081, 30.6230),
+        LatLng(50.4088, 30.6231),
+        LatLng(50.4088, 30.6285),
+        LatLng(50.4091, 30.6282),
+        LatLng(50.4101, 30.6271),
+        LatLng(50.4079, 30.6221),
+        LatLng(50.4067, 30.6285),
+        LatLng(50.4096, 30.6284),
+        LatLng(50.4108, 30.6271),
+        LatLng(50.4081, 30.6231)
+    )
 }

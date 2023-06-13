@@ -150,18 +150,6 @@ private fun Fine(
                 contentDescription = stringResource(R.string.captured_image),
                 contentScale = ContentScale.Crop
             )
-//            CoilImage(
-//                modifier = Modifier
-//                    .size(100.dp)
-//                    .clip(CircleShape)
-//                    .border(width = 2.dp, color = Color.Black, shape = CircleShape),
-//                imageModel = fine.fine.imageUri,
-//                // Crop, Fit, Inside, FillHeight, FillWidth, None
-//                contentScale = ContentScale.Crop,
-//                error = ImageBitmap.imageResource(R.drawable.breaking_news),
-//                // shows a placeholder ImageBitmap when loading.
-//                placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
-//            )
 
             Text(
                 text = fine.carInfo.plate, fontWeight = FontWeight.Bold

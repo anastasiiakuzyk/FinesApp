@@ -1,37 +1,20 @@
 package ua.anastasiia.finesapp.ui.screens.markers
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import android.location.Geocoder
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.launch
+import com.google.android.gms.maps.model.LatLng
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
 import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
 import ua.anastasiia.finesapp.R
-import ua.anastasiia.finesapp.ui.screens.FineDetails
-import ua.anastasiia.finesapp.ui.screens.fine_entry.FineInputForm
-import ua.anastasiia.finesapp.ui.screens.FineUiState
-import ua.anastasiia.finesapp.ui.screens.CarViewModel
-import ua.anastasiia.finesapp.ui.screens.LocationMap
-import ua.anastasiia.finesapp.ui.screens.fine_entry.FineViewModel
+import ua.anastasiia.finesapp.ui.screens.home.HomeViewModel
+import java.util.Locale
 
 object MarkersDestination : NavigationDestination {
     override val route = "markers"
@@ -41,8 +24,21 @@ object MarkersDestination : NavigationDestination {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MarkersScreen(
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val homeUiState by viewModel.homeUiState.collectAsState()
+    val markers: ArrayList<LatLng> = arrayListOf()
+
+    val geocoder = Geocoder(LocalContext.current, Locale.getDefault());
+
+    homeUiState.fineList.forEach {
+        val addressList = geocoder.getFromLocationName(it.fine.location, 1);
+        val address = addressList?.get(0)
+        markers.add(LatLng(address!!.latitude, address.longitude))
+        markers.addAll(Markers.markers)
+    }
+
     Scaffold(
         topBar = {
             FinesTopAppBar(
@@ -52,6 +48,6 @@ fun MarkersScreen(
             )
         },
     ) {
-        LocationsMap()
+        LocationsMap(markersList = markers)
     }
 }
