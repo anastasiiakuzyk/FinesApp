@@ -30,6 +30,7 @@ import ua.anastasiia.finesapp.ui.screens.FineDetails
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineInputForm
 import ua.anastasiia.finesapp.ui.screens.FineUiState
 import ua.anastasiia.finesapp.ui.screens.CarViewModel
+import ua.anastasiia.finesapp.ui.screens.fine_edit.FineEditViewModel
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineViewModel
 
 object FineDetailsDestination : NavigationDestination {
@@ -45,6 +46,7 @@ fun FineDetailsScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FineDetailsViewModel = hiltViewModel(),
+    editViewModel: FineEditViewModel = hiltViewModel(),
     fineViewModel: FineViewModel = hiltViewModel(),
     carViewModel: CarViewModel = hiltViewModel()
 ) {
@@ -84,6 +86,16 @@ fun FineDetailsScreen(
                     navigateBack()
                 }
             },
+            onValidate  = {
+                // If the user rotates the screen very fast, the operation may get cancelled
+                // and the fine may not be updated in the Database. This is because when config
+                // change occurs, the Activity will be recreated and the rememberCoroutineScope will
+                // be cancelled - since the scope is bound to composition.
+                coroutineScope.launch {
+                    editViewModel.validateFine(it)
+                    navigateBack()
+                }
+            },
             modifier = modifier.padding(innerPadding),
             fineViewModel,
             carViewModel
@@ -96,6 +108,7 @@ fun FineDetailsScreen(
 private fun FineDetailsBody(
     fineDetails: FineDetails,
     onDelete: () -> Unit,
+    onValidate: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FineViewModel,
     carViewModel: CarViewModel
@@ -114,6 +127,7 @@ private fun FineDetailsBody(
             carViewModel = carViewModel,
             isLoading = mutableStateOf(false),
             onDelete = onDelete,
+            onValidate = onValidate,
             isViewMode = false,
             fineUiState = FineUiState()
         )

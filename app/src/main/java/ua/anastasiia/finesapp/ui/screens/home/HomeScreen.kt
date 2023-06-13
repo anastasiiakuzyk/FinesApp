@@ -43,6 +43,8 @@ import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.data.FineWithCarAndViolations
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
 import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
+import ua.anastasiia.finesapp.ui.theme.Teal100
+import ua.anastasiia.finesapp.ui.theme.Teal200
 import java.text.NumberFormat
 
 object HomeDestination : NavigationDestination {
@@ -133,7 +135,10 @@ private fun FineList(
 private fun Fine(
     fine: FineWithCarAndViolations, onFineClick: (FineWithCarAndViolations) -> Unit
 ) {
-    Card(shape = RoundedCornerShape(10.dp)) {
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        backgroundColor = if (fine.fine.valid) Teal100 else Color.White
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier

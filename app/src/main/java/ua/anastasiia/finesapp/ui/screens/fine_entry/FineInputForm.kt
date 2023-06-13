@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,7 +43,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ua.anastasiia.finesapp.LoadingUI
 import ua.anastasiia.finesapp.R
-import ua.anastasiia.finesapp.data.entity.Violation
 import ua.anastasiia.finesapp.photo.camera.CameraCapture
 import ua.anastasiia.finesapp.photo.gallery.GallerySelect
 import ua.anastasiia.finesapp.ui.screens.CarViewModel
@@ -52,7 +52,6 @@ import ua.anastasiia.finesapp.ui.screens.LocationMap
 import ua.anastasiia.finesapp.ui.screens.fine_details.DeleteConfirmationDialog
 import ua.anastasiia.finesapp.util.getFileFromUri
 import ua.anastasiia.finesapp.web.model.Results
-import java.io.File
 
 @OptIn(
     ExperimentalCoilApi::class, ExperimentalPermissionsApi::class, ExperimentalCoroutinesApi::class
@@ -69,7 +68,8 @@ fun FineInputForm(
     carViewModel: CarViewModel,
     isLoading: MutableState<Boolean>,
     onSaveClick: () -> Unit,
-    onDelete: () -> Unit = {}
+    onDelete: () -> Unit = {},
+    onValidate: (Boolean) -> Unit = {}
 ) {
     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
     val context = LocalContext.current
@@ -311,17 +311,23 @@ fun FineInputForm(
 
                     var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
-                    OutlinedButton(
-                        onClick = { deleteConfirmationRequired = true },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(stringResource(R.string.delete))
-                    }
-                    if (deleteConfirmationRequired) {
-                        DeleteConfirmationDialog(onDeleteConfirm = {
-                            deleteConfirmationRequired = false
-                            onDelete()
-                        }, onDeleteCancel = { deleteConfirmationRequired = false })
+                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                        OutlinedButton(
+                            onClick = { deleteConfirmationRequired = true }
+                        ) {
+                            Text(stringResource(R.string.delete))
+                        }
+                        if (deleteConfirmationRequired) {
+                            DeleteConfirmationDialog(onDeleteConfirm = {
+                                deleteConfirmationRequired = false
+                                onDelete()
+                            }, onDeleteCancel = { deleteConfirmationRequired = false })
+                        }
+                        OutlinedButton(
+                            onClick = { onValidate(!fineDetails.valid) }
+                        ) {
+                            Text(stringResource(if (!fineDetails.valid) R.string.validate else R.string.invalidate))
+                        }
                     }
                 }
             }

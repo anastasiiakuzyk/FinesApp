@@ -59,5 +59,7 @@
     <string name="photoCaptureSucceeded">Photo capture succeeded</string>
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="noResults">No results!</string>
+    <string name="validate">Validate</string>
+    <string name="invalidate">Invalidate</string>
 
 </resources>

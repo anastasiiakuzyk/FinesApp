@@ -52,6 +52,7 @@ class FineRepository @Inject constructor(
             fineState.fine.location,
             fineState.fine.date,
             fineState.fine.imageUri,
+            false,
             fineIdSAVE
         )
         Log.d("newFine", newFine.toString())

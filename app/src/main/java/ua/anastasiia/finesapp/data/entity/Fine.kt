@@ -18,5 +18,6 @@ data class Fine(
     val location: String,
     val date: String,
     val imageUri: String,
+    val valid: Boolean,
     val car_id: Int
 )

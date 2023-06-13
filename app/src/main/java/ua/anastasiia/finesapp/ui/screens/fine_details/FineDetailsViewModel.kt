@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ua.anastasiia.finesapp.data.FineRepository
-import ua.anastasiia.finesapp.ui.screens.FineDetails import ua.anastasiia.finesapp.ui.screens.toFineWithCarAndViolations
+import ua.anastasiia.finesapp.ui.screens.FineDetails
+import ua.anastasiia.finesapp.ui.screens.toFineWithCarAndViolations
 import javax.inject.Inject
 
 /**
@@ -33,15 +34,16 @@ class FineDetailsViewModel @Inject constructor(
         fineRepository.getFineWithCarAndViolationsStream(fineId)
             .filterNotNull()
             .map { fineWithCarAndViolations ->
-                FineDetails (
+                FineDetails(
                     id = fineWithCarAndViolations.fine.fine_id,
                     location = fineWithCarAndViolations.fine.location,
                     date = fineWithCarAndViolations.fine.date,
-                    plate= fineWithCarAndViolations.carInfo.plate,
+                    plate = fineWithCarAndViolations.carInfo.plate,
                     make = fineWithCarAndViolations.carInfo.make,
                     model = fineWithCarAndViolations.carInfo.model,
                     color = fineWithCarAndViolations.carInfo.color,
                     imageUri = Uri.parse(fineWithCarAndViolations.fine.imageUri),
+                    valid = fineWithCarAndViolations.fine.valid,
                     violations = fineWithCarAndViolations.violations,
                     sum = fineWithCarAndViolations.violations.sumOf { it.price }
                 )
@@ -56,6 +58,10 @@ class FineDetailsViewModel @Inject constructor(
      */
     suspend fun deleteFine() {
         fineRepository.deleteFine(uiState.value.toFineWithCarAndViolations())
+    }
+
+    suspend fun updateFine() {
+        fineRepository.updateFullFine(uiState.value.copy(valid = true).toFineWithCarAndViolations())
     }
 
     companion object {

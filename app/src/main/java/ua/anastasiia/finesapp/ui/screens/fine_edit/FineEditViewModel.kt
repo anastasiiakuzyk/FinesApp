@@ -48,6 +48,14 @@ class FineEditViewModel @Inject constructor(
             fineRepository.updateFullFine(fineUiState.fineDetails.toFineWithCarAndViolations())
         }
     }
+    /**
+     * Update the fine in the [FineRepository]'s data source
+     */
+    suspend fun validateFine(valid:Boolean) {
+        if (validateInput(fineUiState.fineDetails)) {
+            fineRepository.updateFullFine(fineUiState.fineDetails.copy(valid = valid).toFineWithCarAndViolations())
+        }
+    }
 
     /**
      * Updates the [fineUiState] with the value provided in the argument. This method also triggers

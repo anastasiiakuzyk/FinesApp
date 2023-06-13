@@ -23,6 +23,7 @@ data class FineDetails(
     val model: String = "",
     val color: String = "",
     val imageUri: Uri = EMPTY_IMAGE_URI,
+    val valid:Boolean = false,
 
     val violations: List<Violation> = listOf(),
     val sum: Double = 0.0
@@ -42,7 +43,8 @@ fun FineDetails.toFineWithCarAndViolations(): FineWithCarAndViolations =
             location = location,
             date = date,
             imageUri = imageUri.toString(),
-            car_id = car_id
+            car_id = car_id,
+            valid = valid
         ),
         violations = violations
     )
