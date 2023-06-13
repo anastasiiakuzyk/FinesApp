@@ -21,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.toSize
+import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.data.dao.Violations
 import ua.anastasiia.finesapp.data.entity.Violation
 
@@ -35,6 +37,17 @@ fun MultiComboBox(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val options: List<Violation> = Violations.violations
+
+    val optionsLocal: List<Violation> = listOf(
+        Violation(options[0].violation_id, stringResource(R.string.sel1), options[0].price),
+        Violation(options[1].violation_id, stringResource(R.string.sel2), options[1].price),
+        Violation(options[2].violation_id, stringResource(R.string.sel3), options[2].price),
+        Violation(options[3].violation_id, stringResource(R.string.sel4), options[3].price),
+        Violation(options[4].violation_id, stringResource(R.string.sel5), options[4].price),
+        Violation(options[5].violation_id, stringResource(R.string.sel6), options[5].price),
+        Violation(options[6].violation_id, stringResource(R.string.sel7), options[6].price),
+    )
+
     val isEnabled by rememberUpdatedState { options.isNotEmpty() }
 
     val selectedOptionsList = remember { mutableStateListOf<Int>() }
@@ -53,11 +66,7 @@ fun MultiComboBox(
     ) {
         val selectedSummary = when (selectedOptionsList.distinct().size) {
             0 -> ""
-            1 -> options.first {
-                it.violation_id == selectedOptionsList.distinct().first()
-            }.description
-
-            else -> "Selected ${selectedOptionsList.distinct().size}"
+            else -> "${stringResource(R.string.selected)}: ${selectedOptionsList.distinct().size}"
         }
         OutlinedTextField(
             enabled = isEnabled(),
@@ -81,7 +90,7 @@ fun MultiComboBox(
             onDismissRequest = {
                 expanded = false
                 onOptionsChosen(options.filter { it.violation_id in selectedOptionsList.distinct() })
-            },
+            }
         ) {
             for (option in options) {
 
@@ -112,7 +121,17 @@ fun MultiComboBox(
                                 onOptionsChosen(options.filter { it.violation_id in selectedOptionsList.distinct() })
                             },
                         )
-                        Text(text = option.description)
+                        var description: String = stringResource(R.string.sel1)
+                        when (option.violation_id) {
+                            1 -> description = stringResource(R.string.sel1)
+                            2 -> description = stringResource(R.string.sel2)
+                            3 -> description = stringResource(R.string.sel3)
+                            4 -> description = stringResource(R.string.sel4)
+                            5 -> description = stringResource(R.string.sel5)
+                            6 -> description = stringResource(R.string.sel6)
+                            7 -> description = stringResource(R.string.sel7)
+                        }
+                        Text(text = "$description - ${option.price}${stringResource(R.string.currency)}")
                     }
                 }
             }

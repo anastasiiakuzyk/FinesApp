@@ -41,6 +41,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ua.anastasiia.finesapp.LoadingUI
 import ua.anastasiia.finesapp.R
+import ua.anastasiia.finesapp.data.entity.Violation
 import ua.anastasiia.finesapp.photo.camera.CameraCapture
 import ua.anastasiia.finesapp.photo.gallery.GallerySelect
 import ua.anastasiia.finesapp.ui.screens.CarViewModel
@@ -139,10 +140,10 @@ fun FineInputForm(
                                 onImageFile = { file ->
 //                                Log.e("file.str", file.toString())
 //                                imageUri = file
-                                imageUri = file.toUri()
+                                    imageUri = file.toUri()
 //                                carViewModel.getResultsFromFile(file)
-                                carViewModel.getResultsFromFile(context.getFileFromUri(imageUri))
-                            })
+                                    carViewModel.getResultsFromFile(context.getFileFromUri(imageUri))
+                                })
                             Button(modifier = Modifier
                                 .align(Alignment.TopEnd)
                                 .padding(4.dp),
@@ -233,7 +234,8 @@ fun FineInputForm(
                             violation.violation_id
                         })
 
-                    OutlinedTextField(value = fineDetails.sum.toString(),
+                    OutlinedTextField(
+                        value = "${fineDetails.sum}${stringResource(R.string.currency)}",
                         onValueChange = {},
                         label = { Text(stringResource(R.string.sum)) },
                         modifier = Modifier.fillMaxWidth(),
@@ -259,7 +261,18 @@ fun FineInputForm(
                         ) {
                             Column(Modifier.padding(8.dp)) {
                                 fineDetails.violations.forEachIndexed { i, it ->
-                                    Text(text = it.description, modifier.padding(8.dp))
+                                    var description: String = stringResource(R.string.sel1)
+                                    when (it.violation_id) {
+                                        1 -> description = stringResource(R.string.sel1)
+                                        2 -> description = stringResource(R.string.sel2)
+                                        3 -> description = stringResource(R.string.sel3)
+                                        4 -> description = stringResource(R.string.sel4)
+                                        5 -> description = stringResource(R.string.sel5)
+                                        6 -> description = stringResource(R.string.sel6)
+                                        7 -> description = stringResource(R.string.sel7)
+                                    }
+
+                                    Text(text = "$description - ${it.price}", modifier.padding(8.dp))
                                     if (fineDetails.violations.size - 1 > i) Divider(
                                         modifier.padding(
                                             8.dp
@@ -270,7 +283,8 @@ fun FineInputForm(
                         }
                     }
 
-                    OutlinedTextField(value = fineDetails.sum.toString(),
+                    OutlinedTextField(
+                        value = "${fineDetails.sum}${stringResource(R.string.currency)}",
                         onValueChange = {},
                         label = { Text(stringResource(R.string.sum)) },
                         modifier = Modifier.fillMaxWidth(),

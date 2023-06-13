@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
-import ua.anastasiia.finesapp.FinesTopAppBar
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineEntryBody
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
 import ua.anastasiia.finesapp.ui.screens.CarViewModel
+import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineViewModel
 
 object FineEditDestination : NavigationDestination {

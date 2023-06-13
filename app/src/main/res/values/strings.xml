@@ -11,7 +11,6 @@
     <string name="fine_entry_title">Add Fine</string>
     <string name="no">No</string>
     <string name="save_action">Save</string>
-    <string name="sell">Sell</string>
     <string name="yes">Yes</string>
     <string name="camera_permission">I\'m going to have to ask for camera permission.</string>
     <string name="no_camera">No Camera!</string>
@@ -39,4 +38,28 @@
     <string name="permission_request">Permission request</string>
     <string name="ok">OK</string>
     <string name="markers">Markers</string>
+    <string name="changeToUk">Change to UK</string>
+
+    <string name="en" translatable="false">ENG</string>
+    <string name="uk" translatable="false">УКР</string>
+    <string name="language">ENG</string>
+    <string name="selected">Selected</string>
+
+    <string name="var1" translatable="false">BLOCKING DRIVEWAY</string>
+    <string name="var2" translatable="false">PARKED IN CROSS WALK</string>
+    <string name="var3" translatable="false">VEHICLE PARKED IN TWO SPACES</string>
+    <string name="var4" translatable="false">BUS ZONE</string>
+    <string name="var5" translatable="false">NO PAID PARKING SESSION</string>
+    <string name="var6" translatable="false">DISABLED ZONE</string>
+    <string name="var7" translatable="false">VIOLATION OF POSTED SIGNS</string>
+
+    <string name="sel1">BLOCKING DRIVEWAY</string>
+    <string name="sel2">PARKED IN CROSS WALK</string>
+    <string name="sel3">VEHICLE PARKED IN TWO SPACES</string>
+    <string name="sel4">BUS ZONE</string>
+    <string name="sel5">NO PAID PARKING SESSION</string>
+    <string name="sel6">DISABLED ZONE</string>
+    <string name="sel7">VIOLATION OF POSTED SIGNS</string>
+    <string name="currency">₴</string>
+
 </resources>

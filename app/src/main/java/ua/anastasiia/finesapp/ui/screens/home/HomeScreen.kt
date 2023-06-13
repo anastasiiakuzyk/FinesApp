@@ -32,20 +32,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.skydoves.landscapist.coil.CoilImage
-import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
-import ua.anastasiia.finesapp.FinesTopAppBar
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.data.FineWithCarAndViolations
+import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
+import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
 import java.text.NumberFormat
 
 object HomeDestination : NavigationDestination {
@@ -170,8 +167,7 @@ private fun Fine(
                 text = fine.carInfo.plate, fontWeight = FontWeight.Bold
             )
             Text(
-                text = NumberFormat.getCurrencyInstance()
-                    .format(fine.violations.sumOf { it.price }),
+                text = "${fine.violations.sumOf { it.price }}${stringResource(R.string.currency)}"
             )
         }
     }

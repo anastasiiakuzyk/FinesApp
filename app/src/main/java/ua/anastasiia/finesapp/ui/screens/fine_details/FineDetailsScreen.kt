@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
-import ua.anastasiia.finesapp.FinesTopAppBar
+import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.ui.screens.FineDetails
 import ua.anastasiia.finesapp.ui.screens.fine_entry.FineInputForm
