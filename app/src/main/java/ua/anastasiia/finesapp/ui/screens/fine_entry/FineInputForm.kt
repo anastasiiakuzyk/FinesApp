@@ -45,8 +45,11 @@ import ua.anastasiia.finesapp.ui.screens.FineUiState
 import ua.anastasiia.finesapp.ui.screens.LocationMap
 import ua.anastasiia.finesapp.ui.screens.fine_details.DeleteConfirmationDialog
 import ua.anastasiia.finesapp.util.getFileFromUri
+import ua.anastasiia.finesapp.util.isDateValid
+import ua.anastasiia.finesapp.util.isLocationValid
+import ua.anastasiia.finesapp.util.isMakeModelValid
+import ua.anastasiia.finesapp.util.isPlateValid
 import ua.anastasiia.finesapp.web.model.Results
-import java.util.regex.Pattern
 
 @OptIn(
     ExperimentalCoilApi::class, ExperimentalPermissionsApi::class, ExperimentalCoroutinesApi::class
@@ -170,98 +173,74 @@ fun FineInputForm(
                     location = fineDetails.location
                 )
                 val locationValue = if (isViewMode) viewModel.location else fineDetails.location
+                var locationError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = locationValue,
-                    onValueChange = { onValueChange(fineDetails.copy(location = it)) },
+                    onValueChange = {
+                        onValueChange(fineDetails.copy(location = it))
+                        locationError = !isLocationValid
+                    },
+                    isError = locationError,
                     label = { Text(stringResource(R.string.location)) },
                     modifier = Modifier.fillMaxWidth(),
-//                    enabled = enabled,
                     readOnly = !enabled,
                     singleLine = true
                 )
+
                 viewModel.updateDateTime()
                 val dateValue = if (isViewMode) viewModel.date else fineDetails.date
+                var dateError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = dateValue,
-                    onValueChange = { onValueChange(fineDetails.copy(date = it)) },
+                    onValueChange = {
+                        onValueChange(fineDetails.copy(date = it))
+                        dateError = !isDateValid(it)
+                    },
+                    isError = dateError,
                     label = { Text(stringResource(R.string.date)) },
                     modifier = Modifier.fillMaxWidth(),
-//                    enabled = enabled,
                     readOnly = !enabled,
                     singleLine = true
                 )
-                fun isPlateValid(plate: String?): Boolean {
-                    if (plate.isNullOrEmpty()) {
-                        return false
-                    }
-                    return Pattern
-                        .compile(
-                            "^(?=(.*[A-ZА-ЯІЇҐЄ]){2,})([A-ZА-ЯІЇҐЄ0-9]{3,8})\$"
-                        ).matcher(plate).find()
-                }
 
-                var showPlateError by remember { mutableStateOf(false) }
-
+                var plateError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = fineDetails.plate,
                     onValueChange = {
                         onValueChange(fineDetails.copy(plate = it))
-                        showPlateError = !isPlateValid(it)
+                        plateError = !isPlateValid(it)
                     },
-                    isError = showPlateError,
+                    isError = plateError,
                     label = { Text(stringResource(R.string.plate)) },
                     modifier = Modifier.fillMaxWidth(),
-//                    enabled = enabled,
                     readOnly = !enabled,
                     singleLine = true
                 )
 
-                fun isMakeValid(make: String?): Boolean {
-                    if (make.isNullOrEmpty()) {
-                        return false
-                    }
-                    return Pattern
-                        .compile(
-                            "^.{1,50}\$"
-                        ).matcher(make).find()
-                }
-
-                var showMakeError by remember { mutableStateOf(false) }
+                var makeError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = fineDetails.make,
                     onValueChange = {
                         onValueChange(fineDetails.copy(make = it))
-                        showMakeError = !isMakeValid(it)
+                        makeError = !isMakeModelValid(it)
                     },
-                    isError = showMakeError,
+                    isError = makeError,
                     label = { Text(stringResource(R.string.make)) },
                     modifier = Modifier.fillMaxWidth(),
-//                    enabled = enabled,
                     readOnly = !enabled,
                     singleLine = true
                 )
 
-                fun isModelValid(model: String?): Boolean {
-                    if (model.isNullOrEmpty()) {
-                        return false
-                    }
-                    return Pattern
-                        .compile(
-                            "^.{1,50}\$"
-                        ).matcher(model).find()
-                }
-
-                var showModelError by remember { mutableStateOf(false) }
+                var modelError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = fineDetails.model,
                     onValueChange = {
                         onValueChange(fineDetails.copy(model = it))
-                        showModelError = !isModelValid(it)
+                        modelError = !isMakeModelValid(it)
                     },
-                    isError = showModelError,
+                    isError = modelError,
                     label = { Text(stringResource(R.string.model)) },
                     modifier = Modifier.fillMaxWidth(),
-//                    enabled = enabled,
                     readOnly = !enabled,
                     singleLine = true
                 )
@@ -303,7 +282,6 @@ fun FineInputForm(
                     onValueChange = {},
                     label = { Text(stringResource(R.string.sum)) },
                     modifier = Modifier.fillMaxWidth(),
-//                    enabled = false,
                     readOnly = true,
                     singleLine = true
                 )
@@ -311,10 +289,7 @@ fun FineInputForm(
                 if (enabled) {
                     Button(
                         onClick = onSaveClick,
-                        enabled = fineUiState.isEntryValid
-                            .and(!showPlateError)
-                            .and(!showMakeError)
-                            .and(!showModelError),
+                        enabled = fineUiState.isEntryValid,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(R.string.save_action))

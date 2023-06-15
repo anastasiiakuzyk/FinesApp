@@ -10,10 +10,15 @@ import ua.anastasiia.finesapp.data.FineRepository
 import ua.anastasiia.finesapp.ui.screens.FineDetails
 import ua.anastasiia.finesapp.ui.screens.FineUiState
 import ua.anastasiia.finesapp.ui.screens.toFineWithCarAndViolations
-import java.text.SimpleDateFormat
+import ua.anastasiia.finesapp.util.sdf
+import ua.anastasiia.finesapp.util.isDateValid
+import ua.anastasiia.finesapp.util.isLocationValid
+import ua.anastasiia.finesapp.util.isMakeModelValid
+import ua.anastasiia.finesapp.util.isPlateValid
 import java.util.Date
 import javax.inject.Inject
 
+@SuppressLint("SimpleDateFormat")
 @HiltViewModel
 class FineViewModel @Inject constructor(private val fineRepository: FineRepository) : ViewModel() {
 
@@ -48,26 +53,26 @@ class FineViewModel @Inject constructor(private val fineRepository: FineReposito
     var date by mutableStateOf("")
         private set
 
+
     /**
      * Updates the [date] with the value provided in the argument.
      */
-    @SuppressLint("SimpleDateFormat")
     fun updateDateTime() {
-        val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
         date = sdf.format(Date())
         updateUiState(fineUiState.fineDetails.copy(date = date))
     }
 
     private fun validateInput(uiState: FineDetails = fineUiState.fineDetails): Boolean {
         return with(uiState) {
-            location.isNotBlank() &&
-                    date.isNotBlank() &&
-                    plate.isNotBlank() &&
-                    make.isNotBlank() &&
-                    model.isNotBlank() &&
+            location.isNotBlank() && isLocationValid &&
+                    date.isNotBlank() && isDateValid(date) &&
+                    plate.isNotBlank() && isPlateValid(plate) &&
+                    make.isNotBlank() && isMakeModelValid(make) &&
+                    model.isNotBlank() && isMakeModelValid(model) &&
                     color.isNotBlank() &&
                     violations.isNotEmpty()
         }
     }
+
 
 }

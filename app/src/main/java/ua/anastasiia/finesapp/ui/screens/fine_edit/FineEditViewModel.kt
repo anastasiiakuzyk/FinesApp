@@ -15,6 +15,10 @@ import ua.anastasiia.finesapp.ui.screens.FineDetails
 import ua.anastasiia.finesapp.ui.screens.FineUiState
 import ua.anastasiia.finesapp.ui.screens.toFineUiState
 import ua.anastasiia.finesapp.ui.screens.toFineWithCarAndViolations
+import ua.anastasiia.finesapp.util.isDateValid
+import ua.anastasiia.finesapp.util.isLocationValid
+import ua.anastasiia.finesapp.util.isMakeModelValid
+import ua.anastasiia.finesapp.util.isPlateValid
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,12 +52,15 @@ class FineEditViewModel @Inject constructor(
             fineRepository.updateFullFine(fineUiState.fineDetails.toFineWithCarAndViolations())
         }
     }
+
     /**
      * Update the fine in the [FineRepository]'s data source
      */
-    suspend fun validateFine(valid:Boolean) {
+    suspend fun validateFine(valid: Boolean) {
         if (validateInput(fineUiState.fineDetails)) {
-            fineRepository.updateFullFine(fineUiState.fineDetails.copy(valid = valid).toFineWithCarAndViolations())
+            fineRepository.updateFullFine(
+                fineUiState.fineDetails.copy(valid = valid).toFineWithCarAndViolations()
+            )
         }
     }
 
@@ -68,12 +75,11 @@ class FineEditViewModel @Inject constructor(
 
     private fun validateInput(fineDetails: FineDetails = fineUiState.fineDetails): Boolean {
         return with(fineDetails) {
-            location.isNotBlank()
-                    &&
-                    date.isNotBlank() &&
-                    plate.isNotBlank() &&
-                    make.isNotBlank() &&
-                    model.isNotBlank() &&
+            location.isNotBlank() && isLocationValid &&
+                    date.isNotBlank() && isDateValid(date) &&
+                    plate.isNotBlank() && isPlateValid(plate) &&
+                    make.isNotBlank() && isMakeModelValid(make) &&
+                    model.isNotBlank() && isMakeModelValid(model) &&
                     color.isNotBlank() &&
                     violations.isNotEmpty()
         }
