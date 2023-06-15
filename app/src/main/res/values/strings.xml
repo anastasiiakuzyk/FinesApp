@@ -45,21 +45,35 @@
     <string name="language">ENG</string>
     <string name="selected">selected</string>
 
-    <string name="sel1">Violation of license plate use</string>
-    <string name="sel2">Violation of signs</string>
-    <string name="sel3">Parked in two lines</string>
-    <string name="sel4">Parked in forbidden areas</string>
-    <string name="sel5">Obstructs traffic, pedestrians</string>
-    <string name="sel6">Located on public transport lane</string>
-    <string name="sel7">Parked on bike lane</string>
-    <string name="sel8">Obstructs municipal transport movement</string>
-    <string name="sel9">Violates parking scheme</string>
-    <string name="sel10">Parked in disabled zone</string>
-    <string name="currency">₴</string>
+    <string-array name="violations_array">
+        <item>Violation of license plate use</item>
+        <item>Violation of signs</item>
+        <item>Parked in two lines</item>
+        <item>Parked in forbidden areas</item>
+        <item>Obstructs traffic, pedestrians</item>
+        <item>Located on public transport lane</item>
+        <item>Parked on bike lane</item>
+        <item>Obstructs municipal transport movement</item>
+        <item>Violates parking scheme</item>
+        <item>Parked in disabled zone</item>
+    </string-array>
+
+    <string name="currency" translatable="false">₴</string>
     <string name="photoCaptureSucceeded">Photo capture succeeded</string>
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="noResults">No results!</string>
     <string name="validate">Validate</string>
     <string name="invalidate">Invalidate</string>
+
+    <string-array name="colors_array">
+        <item>White ◻</item>
+        <item>Black ⬛</item>
+        <item>Silver ⬜</item>
+        <item>Red 🟥</item>
+        <item>Blue 🟦</item>
+        <item>Green 🟩</item>
+        <item>Brown 🟫</item>
+        <item>Yellow 🟨</item>
+    </string-array>
 
 </resources>

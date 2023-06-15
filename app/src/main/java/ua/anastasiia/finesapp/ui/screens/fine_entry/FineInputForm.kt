@@ -2,7 +2,6 @@ package ua.anastasiia.finesapp.ui.screens.fine_entry
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,13 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -31,7 +26,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,6 +46,7 @@ import ua.anastasiia.finesapp.ui.screens.LocationMap
 import ua.anastasiia.finesapp.ui.screens.fine_details.DeleteConfirmationDialog
 import ua.anastasiia.finesapp.util.getFileFromUri
 import ua.anastasiia.finesapp.web.model.Results
+import java.util.regex.Pattern
 
 @OptIn(
     ExperimentalCoilApi::class, ExperimentalPermissionsApi::class, ExperimentalCoroutinesApi::class
@@ -180,7 +175,8 @@ fun FineInputForm(
                     onValueChange = { onValueChange(fineDetails.copy(location = it)) },
                     label = { Text(stringResource(R.string.location)) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
+//                    enabled = enabled,
+                    readOnly = !enabled,
                     singleLine = true
                 )
                 viewModel.updateDateTime()
@@ -190,128 +186,146 @@ fun FineInputForm(
                     onValueChange = { onValueChange(fineDetails.copy(date = it)) },
                     label = { Text(stringResource(R.string.date)) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
+//                    enabled = enabled,
+                    readOnly = !enabled,
                     singleLine = true
                 )
+                fun isPlateValid(plate: String?): Boolean {
+                    if (plate.isNullOrEmpty()) {
+                        return false
+                    }
+                    return Pattern
+                        .compile(
+                            "^(?=(.*[A-ZА-ЯІЇҐЄ]){2,})([A-ZА-ЯІЇҐЄ0-9]{3,8})\$"
+                        ).matcher(plate).find()
+                }
+
+                var showPlateError by remember { mutableStateOf(false) }
+
                 OutlinedTextField(
                     value = fineDetails.plate,
-                    onValueChange = { onValueChange(fineDetails.copy(plate = it)) },
+                    onValueChange = {
+                        onValueChange(fineDetails.copy(plate = it))
+                        showPlateError = !isPlateValid(it)
+                    },
+                    isError = showPlateError,
                     label = { Text(stringResource(R.string.plate)) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
+//                    enabled = enabled,
+                    readOnly = !enabled,
                     singleLine = true
                 )
+
+                fun isMakeValid(make: String?): Boolean {
+                    if (make.isNullOrEmpty()) {
+                        return false
+                    }
+                    return Pattern
+                        .compile(
+                            "^.{1,50}\$"
+                        ).matcher(make).find()
+                }
+
+                var showMakeError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = fineDetails.make,
-                    onValueChange = { onValueChange(fineDetails.copy(make = it)) },
+                    onValueChange = {
+                        onValueChange(fineDetails.copy(make = it))
+                        showMakeError = !isMakeValid(it)
+                    },
+                    isError = showMakeError,
                     label = { Text(stringResource(R.string.make)) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
+//                    enabled = enabled,
+                    readOnly = !enabled,
                     singleLine = true
                 )
+
+                fun isModelValid(model: String?): Boolean {
+                    if (model.isNullOrEmpty()) {
+                        return false
+                    }
+                    return Pattern
+                        .compile(
+                            "^.{1,50}\$"
+                        ).matcher(model).find()
+                }
+
+                var showModelError by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = fineDetails.model,
-                    onValueChange = { onValueChange(fineDetails.copy(model = it)) },
+                    onValueChange = {
+                        onValueChange(fineDetails.copy(model = it))
+                        showModelError = !isModelValid(it)
+                    },
+                    isError = showModelError,
                     label = { Text(stringResource(R.string.model)) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
+//                    enabled = enabled,
+                    readOnly = !enabled,
                     singleLine = true
                 )
-                OutlinedTextField(
-                    value = fineDetails.color,
-                    onValueChange = { onValueChange(fineDetails.copy(color = it)) },
-                    label = { Text(stringResource(R.string.color)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
-                    singleLine = true
+
+                ChooseColor(
+                    labelText = stringResource(R.string.color),
+                    onColorChosen = {
+                        onValueChange(fineDetails.copy(color = it))
+                    },
+                    recognizedColor = fineDetails.color,
+                    enabled = enabled
                 )
+
                 Image(
                     modifier = Modifier.size(400.dp),
                     painter = rememberImagePainter(if (isViewMode) imageUri else fineDetails.imageUri),
                     contentDescription = stringResource(R.string.captured_image),
                     contentScale = ContentScale.FillWidth
                 )
-
                 if (enabled) {
-                    MultiComboBox(labelText = stringResource(R.string.violations),
-                        onOptionsChosen = { violations ->
+                    SelectViolations(
+                        labelText = stringResource(R.string.violations),
+                        onViolationsChosen = { violations ->
                             onValueChange(
                                 fineDetails.copy(violations = violations,
                                     sum = violations.sumOf { it.price })
                             )
                         },
-                        selectedIds = fineDetails.violations.map { violation ->
+                        selectedViolationIds = fineDetails.violations.map { violation ->
                             violation.violation_id
-                        })
-
-                    OutlinedTextField(
-                        value = "${fineDetails.sum}${stringResource(R.string.currency)}",
-                        onValueChange = {},
-                        label = { Text(stringResource(R.string.sum)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = false,
-                        readOnly = true,
-                        singleLine = true
+                        }
                     )
+                } else {
+                    SelectedViolations(fineDetails, modifier)
+                }
 
+                OutlinedTextField(
+                    value = "${fineDetails.sum}${stringResource(R.string.currency)}",
+                    onValueChange = {},
+                    label = { Text(stringResource(R.string.sum)) },
+                    modifier = Modifier.fillMaxWidth(),
+//                    enabled = false,
+                    readOnly = true,
+                    singleLine = true
+                )
+
+                if (enabled) {
                     Button(
                         onClick = onSaveClick,
-                        enabled = fineUiState.isEntryValid,
+                        enabled = fineUiState.isEntryValid
+                            .and(!showPlateError)
+                            .and(!showMakeError)
+                            .and(!showModelError),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(R.string.save_action))
                     }
                 } else {
-
-                    if (fineDetails.violations.isNotEmpty()) {
-                        Card(
-                            shape = RoundedCornerShape(5.dp),
-                            border = BorderStroke(1.dp, Color.Gray),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Column(Modifier.padding(8.dp)) {
-                                fineDetails.violations.forEachIndexed { i, it ->
-                                    var description: String = stringResource(R.string.sel1)
-                                    when (it.violation_id) {
-                                        1 -> description = stringResource(R.string.sel1)
-                                        2 -> description = stringResource(R.string.sel2)
-                                        3 -> description = stringResource(R.string.sel3)
-                                        4 -> description = stringResource(R.string.sel4)
-                                        5 -> description = stringResource(R.string.sel5)
-                                        6 -> description = stringResource(R.string.sel6)
-                                        7 -> description = stringResource(R.string.sel7)
-                                        8 -> description = stringResource(R.string.sel8)
-                                        9 -> description = stringResource(R.string.sel9)
-                                        10 -> description = stringResource(R.string.sel10)
-                                    }
-
-                                    Text(
-                                        text = "$description - ${it.price}${stringResource(R.string.currency)}",
-                                        modifier.padding(8.dp)
-                                    )
-                                    if (fineDetails.violations.size - 1 > i) Divider(
-                                        modifier.padding(
-                                            8.dp
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    OutlinedTextField(
-                        value = "${fineDetails.sum}${stringResource(R.string.currency)}",
-                        onValueChange = {},
-                        label = { Text(stringResource(R.string.sum)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = false,
-                        readOnly = true,
-                        singleLine = true
-                    )
-
                     var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
-                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
                         OutlinedButton(
                             onClick = { deleteConfirmationRequired = true }
                         ) {
@@ -334,3 +348,4 @@ fun FineInputForm(
         }
     }
 }
+

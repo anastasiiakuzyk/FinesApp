@@ -1,8 +1,14 @@
 package ua.anastasiia.finesapp.ui.screens.fine_entry
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
+import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
@@ -20,31 +26,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.data.dao.Violations
 import ua.anastasiia.finesapp.data.entity.Violation
+import ua.anastasiia.finesapp.ui.screens.FineDetails
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MultiComboBox(
+fun SelectViolations(
     labelText: String,
-    onOptionsChosen: (List<Violation>) -> Unit,
+    onViolationsChosen: (List<Violation>) -> Unit,
     modifier: Modifier = Modifier,
-    selectedIds: List<Int> = emptyList(),
+    selectedViolationIds: List<Int> = emptyList(),
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val options: List<Violation> = Violations.violations
+    val violations: List<Violation> = Violations.violations
 
-    val isEnabled by rememberUpdatedState { options.isNotEmpty() }
+    val isEnabled by rememberUpdatedState { violations.isNotEmpty() }
 
-    val selectedOptionsList = remember { mutableStateListOf<Int>() }
+    val selectedViolations = remember { mutableStateListOf<Int>() }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
-    selectedIds.forEach {
-        selectedOptionsList.add(it)
+    selectedViolationIds.forEach {
+        selectedViolations.add(it)
     }
 
     ExposedDropdownMenuBox(
@@ -54,9 +64,9 @@ fun MultiComboBox(
         },
         modifier = modifier
     ) {
-        val selectedSummary = when (selectedOptionsList.distinct().size) {
+        val selectedSummary = when (selectedViolations.distinct().size) {
             0 -> ""
-            else -> "${stringResource(R.string.selected)}: ${selectedOptionsList.distinct().size}"
+            else -> "${stringResource(R.string.selected)}: ${selectedViolations.distinct().size}"
         }
         OutlinedTextField(
             enabled = isEnabled(),
@@ -79,24 +89,24 @@ fun MultiComboBox(
             expanded = expanded,
             onDismissRequest = {
                 expanded = false
-                onOptionsChosen(options.filter { it.violation_id in selectedOptionsList.distinct() })
+                onViolationsChosen(violations.filter { it.violation_id in selectedViolations.distinct() })
             }
         ) {
-            for (option in options) {
+            for (violation in violations) {
 
                 //use derivedStateOf to evaluate if it is checked
                 val checked = remember {
-                    derivedStateOf { option.violation_id in selectedOptionsList.distinct() }
+                    derivedStateOf { violation.violation_id in selectedViolations.distinct() }
                 }.value
 
                 DropdownMenuItem(
                     onClick = {
                         if (!checked) {
-                            selectedOptionsList.add(option.violation_id)
+                            selectedViolations.add(violation.violation_id)
                         } else {
-                            selectedOptionsList.remove(option.violation_id)
+                            selectedViolations.remove(violation.violation_id)
                         }
-                        onOptionsChosen(options.filter { it.violation_id in selectedOptionsList.distinct() })
+                        onViolationsChosen(violations.filter { it.violation_id in selectedViolations.distinct() })
                     }
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -104,30 +114,48 @@ fun MultiComboBox(
                             checked = checked,
                             onCheckedChange = { newCheckedState ->
                                 if (newCheckedState) {
-                                    selectedOptionsList.add(option.violation_id)
+                                    selectedViolations.add(violation.violation_id)
                                 } else {
-                                    selectedOptionsList.remove(option.violation_id)
+                                    selectedViolations.remove(violation.violation_id)
                                 }
-                                onOptionsChosen(options.filter { it.violation_id in selectedOptionsList.distinct() })
+                                onViolationsChosen(violations.filter { it.violation_id in selectedViolations.distinct() })
                             },
                         )
-                        var description: String = stringResource(R.string.sel1)
-                        when (option.violation_id) {
-                            1 -> description = stringResource(R.string.sel1)
-                            2 -> description = stringResource(R.string.sel2)
-                            3 -> description = stringResource(R.string.sel3)
-                            4 -> description = stringResource(R.string.sel4)
-                            5 -> description = stringResource(R.string.sel5)
-                            6 -> description = stringResource(R.string.sel6)
-                            7 -> description = stringResource(R.string.sel7)
-                            8 -> description = stringResource(R.string.sel8)
-                            9 -> description = stringResource(R.string.sel9)
-                            10 -> description = stringResource(R.string.sel10)
-                        }
-                        Text(text = "$description - ${option.price}${stringResource(R.string.currency)}")
+                        Text(
+                            text = stringArrayResource(id = R.array.violations_array)[violation.violation_id - 1] +
+                                    " - ${violation.price}${stringResource(R.string.currency)}"
+                        )
                     }
                 }
             }
         }
     }
 }
+
+
+@Composable
+fun SelectedViolations(
+    fineDetails: FineDetails,
+    modifier: Modifier
+) {
+    Card(
+        shape = RoundedCornerShape(5.dp),
+        border = BorderStroke(1.dp, Color.Gray),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(8.dp)) {
+            fineDetails.violations.forEachIndexed { i, violation ->
+                Text(
+                    text = stringArrayResource(id = R.array.violations_array)[violation.violation_id - 1] +
+                            " - ${violation.price}${stringResource(R.string.currency)}",
+                    modifier = modifier.padding(8.dp)
+                )
+                if (fineDetails.violations.size - 1 > i)
+                    Divider(modifier.padding(8.dp))
+            }
+        }
+    }
+}
+
+
+
