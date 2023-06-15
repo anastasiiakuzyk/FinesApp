@@ -28,14 +28,13 @@ fun MarkersScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
-    val markers: ArrayList<LatLng> = arrayListOf()
+    val markers: ArrayList<MarkerWithPrice> = arrayListOf()
 
     val geocoder = Geocoder(LocalContext.current, Locale.getDefault());
-    homeUiState.fineList.forEach {
-        val addressList = geocoder.getFromLocationName(it.fine.location, 1);
+    homeUiState.fineList.forEach { fine ->
+        val addressList = geocoder.getFromLocationName(fine.fine.location, 1);
         val address = addressList?.get(0)
-        markers.add(LatLng(address!!.latitude, address.longitude))
-        markers.addAll(Markers.markers)
+        markers.add(MarkerWithPrice(LatLng(address!!.latitude, address.longitude), fine.violations.sumOf { it.price }))
     }
 
     Scaffold(
