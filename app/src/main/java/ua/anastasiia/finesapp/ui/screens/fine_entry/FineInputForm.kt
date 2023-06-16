@@ -14,8 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -26,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -83,7 +85,7 @@ fun FineInputForm(
                 if (imageUri != EMPTY_IMAGE_URI) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(onClick = {
                             if (result != null) {
@@ -106,7 +108,7 @@ fun FineInputForm(
                                 ).show()
                             }
                         }) {
-                            Text(stringResource(R.string.fill))
+                            Text(stringResource(R.string.fill), color = Color.White)
                         }
                         Button(onClick = {
                             imageUri = EMPTY_IMAGE_URI
@@ -116,7 +118,7 @@ fun FineInputForm(
                                 )
                             )
                         }) {
-                            Text(stringResource(R.string.remove_image))
+                            Text(stringResource(R.string.remove_image), color = Color.White)
                         }
                         Button(onClick = {
                             onValueChange(
@@ -125,7 +127,7 @@ fun FineInputForm(
                                 )
                             )
                         }) {
-                            Text(stringResource(R.string.remove))
+                            Text(stringResource(R.string.remove), color = Color.White)
                         }
                     }
 
@@ -155,7 +157,10 @@ fun FineInputForm(
                                 onClick = {
                                     showGallerySelect = true
                                 }) {
-                                Text(stringResource(R.string.select_from_gallery))
+                                Text(
+                                    stringResource(R.string.select_from_gallery),
+                                    color = Color.White
+                                )
                             }
                         }
                     }
@@ -181,6 +186,15 @@ fun FineInputForm(
                         locationError = !isLocationValid
                     },
                     isError = locationError,
+                    supportingText = {
+                        if (locationError) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = stringResource(R.string.no_location),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
                     label = { Text(stringResource(R.string.location)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = !enabled,
@@ -194,9 +208,23 @@ fun FineInputForm(
                     value = dateValue,
                     onValueChange = {
                         onValueChange(fineDetails.copy(date = it))
-                        dateError = !isDateValid(it)
+                        dateError = !isDateValid(it).first
                     },
                     isError = dateError,
+                    supportingText = {
+                        if (dateError) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = if (isDateValid(dateValue).second.equals("future_date"))
+                                    stringResource(R.string.future_date)
+                                else {
+                                    stringResource(R.string.invalid_format)
+
+                                },
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
                     label = { Text(stringResource(R.string.date)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = !enabled,
@@ -211,6 +239,15 @@ fun FineInputForm(
                         plateError = !isPlateValid(it)
                     },
                     isError = plateError,
+                    supportingText = {
+                        if (plateError) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = stringResource(R.string.no_plate),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
                     label = { Text(stringResource(R.string.plate)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = !enabled,
@@ -225,6 +262,15 @@ fun FineInputForm(
                         makeError = !isMakeModelValid(it)
                     },
                     isError = makeError,
+                    supportingText = {
+                        if (makeError) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = stringResource(R.string.no_make),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
                     label = { Text(stringResource(R.string.make)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = !enabled,
@@ -239,7 +285,15 @@ fun FineInputForm(
                         modelError = !isMakeModelValid(it)
                     },
                     isError = modelError,
-                    label = { Text(stringResource(R.string.model)) },
+                    supportingText = {
+                        if (modelError) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = stringResource(R.string.no_model),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }, label = { Text(stringResource(R.string.model)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = !enabled,
                     singleLine = true
@@ -292,19 +346,19 @@ fun FineInputForm(
                         enabled = fineUiState.isEntryValid,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(stringResource(R.string.save_action))
+                        Text(stringResource(R.string.save_action), color = Color.White)
                     }
                 } else {
                     var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
                     Row(
                         modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
+                        horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        OutlinedButton(
+                        Button(
                             onClick = { deleteConfirmationRequired = true }
                         ) {
-                            Text(stringResource(R.string.delete))
+                            Text(stringResource(R.string.delete), color = Color.White)
                         }
                         if (deleteConfirmationRequired) {
                             DeleteConfirmationDialog(onDeleteConfirm = {
@@ -312,11 +366,15 @@ fun FineInputForm(
                                 onDelete()
                             }, onDeleteCancel = { deleteConfirmationRequired = false })
                         }
-                        OutlinedButton(
+                        Button(
                             onClick = { onValidate(!fineDetails.valid) }
                         ) {
-                            Text(stringResource(if (!fineDetails.valid) R.string.validate else R.string.invalidate))
+                            Text(
+                                stringResource(if (!fineDetails.valid) R.string.validate else R.string.invalidate),
+                                color = Color.White
+                            )
                         }
+                        Text("")
                     }
                 }
             }

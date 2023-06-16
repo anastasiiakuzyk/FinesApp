@@ -1,6 +1,5 @@
 package ua.anastasiia.finesapp.ui.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,8 +45,7 @@ import ua.anastasiia.finesapp.data.FineWithCarAndViolations
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
 import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
 import ua.anastasiia.finesapp.ui.theme.Teal100
-import ua.anastasiia.finesapp.ui.theme.Teal200
-import java.text.NumberFormat
+import ua.anastasiia.finesapp.util.exportDatabaseToCSVFile
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -64,8 +64,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
-    Log.d("homeUiState", homeUiState.toString())
-
+    val homeValidatedUiState by viewModel.homeValidatedUiState.collectAsState()
     Scaffold(
         topBar = {
             FinesTopAppBar(
@@ -84,6 +83,17 @@ fun HomeScreen(
                 )
             }
         },
+        bottomBar = {
+            val context = LocalContext.current
+            Button(
+                onClick = {
+                    exportDatabaseToCSVFile(context = context, homeValidatedUiState.fineList)
+                },
+                modifier = modifier.navigationBarsPadding().fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.export), color = Color.White)
+            }
+        }
     ) { innerPadding ->
         HomeBody(
             fineList = homeUiState.fineList,

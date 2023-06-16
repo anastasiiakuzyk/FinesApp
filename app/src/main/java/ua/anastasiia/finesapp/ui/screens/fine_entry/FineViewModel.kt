@@ -65,7 +65,7 @@ class FineViewModel @Inject constructor(private val fineRepository: FineReposito
     private fun validateInput(uiState: FineDetails = fineUiState.fineDetails): Boolean {
         return with(uiState) {
             location.isNotBlank() && isLocationValid &&
-                    date.isNotBlank() && isDateValid(date) &&
+                    date.isNotBlank() && isDateValid(date).first &&
                     plate.isNotBlank() && isPlateValid(plate) &&
                     make.isNotBlank() && isMakeModelValid(make) &&
                     model.isNotBlank() && isMakeModelValid(model) &&
@@ -73,6 +73,4 @@ class FineViewModel @Inject constructor(private val fineRepository: FineReposito
                     violations.isNotEmpty()
         }
     }
-
-
 }

@@ -65,6 +65,17 @@
     <string name="validate">Validate</string>
     <string name="invalidate">Invalidate</string>
 
+    <string name="no_location">Location doesn\'t exist</string>
+    <string name="future_date">Date in future</string>
+    <string name="invalid_format">Try format: dd.MM.yyyy HH:mm</string>
+    <string name="no_plate">Must be 3–8 letters or numbers, at least 2 letters</string>
+    <string name="no_make">Make must be 1 to 50 characters</string>
+    <string name="no_model">Model must be 1 to 50 characters</string>
+    <string name="export">Export validated fines</string>
+
+    <string name="file_not_generated">File not generated</string>
+    <string name="file_generated">File generated!</string>
+
     <string-array name="colors_array">
         <item>White ◻</item>
         <item>Black ⬛</item>

@@ -72,6 +72,10 @@ class FineRepository @Inject constructor(
         return fineDao.getFinesWithCarAndViolationsStream()
     }
 
+    fun getFinesValidatedWithCarAndViolations(): Flow<List<FineWithCarAndViolations>> {
+        return fineDao.getFinesValidatedWithCarAndViolationsStream()
+    }
+
     fun getFineWithCarAndViolationsStream(fineId: Int): Flow<FineWithCarAndViolations> {
         return fineDao.getFineWithCarInfoAndViolationsById(fineId)
     }

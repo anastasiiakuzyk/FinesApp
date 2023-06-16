@@ -76,7 +76,7 @@ class FineEditViewModel @Inject constructor(
     private fun validateInput(fineDetails: FineDetails = fineUiState.fineDetails): Boolean {
         return with(fineDetails) {
             location.isNotBlank() && isLocationValid &&
-                    date.isNotBlank() && isDateValid(date) &&
+                    date.isNotBlank() && isDateValid(date).first &&
                     plate.isNotBlank() && isPlateValid(plate) &&
                     make.isNotBlank() && isMakeModelValid(make) &&
                     model.isNotBlank() && isMakeModelValid(model) &&

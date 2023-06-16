@@ -1,6 +1,10 @@
 package ua.anastasiia.finesapp.ui.screens
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
@@ -10,11 +14,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -91,7 +91,7 @@ fun LocaleDropdownMenu() {
                 Icon(
                     imageVector = Icons.Outlined.Language,
                     contentDescription = null,
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.inversePrimary
                 )
             },
             readOnly = true,

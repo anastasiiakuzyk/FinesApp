@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">Штрафи за паркування</string>
+    <string name="attention">Увага</string>
+    <string name="back_button">Назад</string>
+    <string name="delete">Видалити</string>
+    <string name="delete_question">Чи ви впевнені що хочете видалити?</string>
+    <string name="no_fine_description">Поки немає штрафів!</string>
+    <string name="edit_fine_title">Редагування штрафу</string>
+    <string name="fine">Штраф</string>
+    <string name="fine_detail_title">Деталі штрафу</string>
+    <string name="fine_entry_title">Додавання штрафу</string>
+    <string name="no">Ні</string>
+    <string name="save_action">Зберегти</string>
+    <string name="yes">Так</string>
+    <string name="camera_permission">Зараз буде запит на доступ до камери.</string>
+    <string name="no_camera">Немає камери!</string>
+    <string name="open_settings">Відкрити налаштування</string>
+    <string name="gallery_permission">Зараз буде запит на доступ до галереї</string>
+    <string name="no_gallery">О ні! Немає галереї!</string>
+    <string name="use_camera">Використовувати камеру</string>
+    <string name="fill">Заповнити</string>
+    <string name="remove_image">Змінити фото</string>
+    <string name="remove">Видалити</string>
+    <string name="select_from_gallery">Вибрати з галереї</string>
+    <string name="location">адреса</string>
+    <string name="date">дата</string>
+    <string name="plate">номер</string>
+    <string name="make">марка</string>
+    <string name="model">модель</string>
+    <string name="color">колір</string>
+    <string name="captured_image">Зроблене фото</string>
+    <string name="violations">порушення</string>
+    <string name="sum">сума</string>
+    <string name="you">Ви</string>
+    <string name="permissionsNotGrantedContent">Дозволи не надано</string>
+    <string name="permissionsNotAvailableContent">дозволи недоступні</string>
+    <string name="important_permission">Цей дозвіл важливий для цієї програми. Будь ласка, надайте дозвіл.</string>
+    <string name="permission_request">Запит на дозвіл</string>
+    <string name="ok">OK</string>
+    <string name="markers">Позначки на мапі</string>
+    <string name="changeToUk">Змінити на АНГЛ</string>
+    <string name="language">УКР</string>
+    <string name="selected">вибрано</string>
+
+    <string name="photoCaptureSucceeded">Фото успішно зроблено</string>
+    <string name="somethingWentWrong">Щось пішло не так</string>
+    <string name="noResults">Немає результатів!</string>
+
+    <string name="validate">Підтвердити</string>
+    <string name="invalidate">Анулювати</string>
+
+    <string name="no_location">Локація не існує</string>
+    <string name="future_date">Дата у майбутньому</string>
+    <string name="invalid_format">Спробуйте формат: дд.ММ.рррр ГГ:хх</string>
+    <string name="no_plate">Має бути 3–8 літер або цифр, принаймні 2 літери</string>
+    <string name="no_make">Марка має містити від 1 до 50 символів</string>
+    <string name="no_model">Модель має містити від 1 до 50 символів</string>
+
+    <string name="export">Експортувати валідовані штрафи</string>
+    <string name="file_not_generated">Файл не було створено</string>
+    <string name="file_generated">Файл створено</string>
+
+    <string-array name="violations_array">
+        <item>Порушення використання номерних знаків</item>
+        <item>Порушення вимог дорожніх знаків</item>
+        <item>Поставлено в два ряди</item>
+        <item>Зупинка в заборонених місцях</item>
+        <item>Перешкоджає рух транспорту, пішоходам</item>
+        <item>Розташовано на смузі громадського транспорту</item>
+        <item>Розташовано на велодоріжці</item>
+        <item>Перешкоджає руху комунального транспорту</item>
+        <item>Порушує схему паркування транспорту</item>
+        <item>Зупинка на місцях для інвалідів</item>
+    </string-array>
+
+    <string-array name="colors_array">
+        <item>Білий ◻</item>
+        <item>Чоний ⬛</item>
+        <item>Сірий ⬜</item>
+        <item>Червоний 🟥</item>
+        <item>Синій 🟦</item>
+        <item>Зелений 🟩</item>
+        <item>Коричневий 🟫</item>
+        <item>Жовтий 🟨</item>
+    </string-array>
+
+</resources>

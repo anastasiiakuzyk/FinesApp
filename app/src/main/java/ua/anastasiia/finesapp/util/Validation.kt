@@ -17,12 +17,14 @@ val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm")
 
 var isLocationValid by mutableStateOf(false)
 
-fun isDateValid(date: String) = try {
-    val currentDate = Date()
-    val dateValid = sdf.parse(date)
-    currentDate.after(dateValid)
-} catch (e: ParseException) {
-    false
+fun isDateValid(date: String):Pair<Boolean, String> {
+    try {
+        val currentDate = Date()
+        val dateValid = sdf.parse(date)
+        return Pair(currentDate.after(dateValid), "future_date")
+    } catch (e: ParseException) {
+        return Pair(false, "invalid_format")
+    }
 }
 
 fun isPlateValid(plate: String?): Boolean {

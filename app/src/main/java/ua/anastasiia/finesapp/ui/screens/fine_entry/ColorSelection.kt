@@ -35,9 +35,9 @@ fun ChooseColor(
         colorsToView.add(it)
     }
 
-    var selectedOptionText by remember { mutableStateOf(colors[0]) }
+    var selectedOptionText by remember { mutableStateOf("") }
     selectedOptionText =
-        colors.firstOrNull { color -> color.equals(recognizedColor, true) } ?: colors[0]
+        colors.firstOrNull { color -> color.equals(recognizedColor, true) } ?: ""
 
     if (enabled) {
         ExposedDropdownMenuBox(
@@ -49,7 +49,8 @@ fun ChooseColor(
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 readOnly = true,
-                value = colorsView[colors.indexOf(selectedOptionText)],
+                value = if (selectedOptionText == "") ""
+                else colorsView[colors.indexOf(selectedOptionText)],
                 onValueChange = { },
                 label = { Text(labelText) },
                 trailingIcon = {
@@ -83,7 +84,8 @@ fun ChooseColor(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             readOnly = true,
-            value = colorsView[colors.indexOf(selectedOptionText)],
+            value = if (selectedOptionText == "") ""
+            else colorsView[colors.indexOf(selectedOptionText)],
             onValueChange = { },
             label = { Text(labelText) }
         )

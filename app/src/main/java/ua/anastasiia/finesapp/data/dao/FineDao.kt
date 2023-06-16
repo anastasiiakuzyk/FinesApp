@@ -35,6 +35,10 @@ interface FineDao {
     fun getFinesWithCarAndViolationsStream(): Flow<List<FineWithCarAndViolations>>
 
     @Transaction
+    @Query("SELECT * FROM Fine where valid=1")
+    fun getFinesValidatedWithCarAndViolationsStream(): Flow<List<FineWithCarAndViolations>>
+
+    @Transaction
     @Query("SELECT * FROM Fine WHERE fine_id = :fineId")
     fun getFineWithCarInfoAndViolationsById(fineId: Int): Flow<FineWithCarAndViolations>
 
