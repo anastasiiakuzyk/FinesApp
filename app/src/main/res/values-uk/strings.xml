@@ -56,9 +56,10 @@
     <string name="no_make">Марка має містити від 1 до 50 символів</string>
     <string name="no_model">Модель має містити від 1 до 50 символів</string>
 
-    <string name="export">Експортувати валідовані штрафи</string>
+    <string name="export">Експортувати підтверджені штрафи</string>
     <string name="file_not_generated">Файл не було створено</string>
     <string name="file_generated">Файл створено</string>
+    <string name="file_empty">Немає штрафів для експорту, будь ласка, підтвердіть штрафи!</string>
 
     <string-array name="violations_array">
         <item>Порушення використання номерних знаків</item>

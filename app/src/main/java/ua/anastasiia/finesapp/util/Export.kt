@@ -14,33 +14,35 @@ fun exportDatabaseToCSVFile(
     context: Context,
     fines: List<FineWithCarAndViolations>
 ) {
-    val csvFile = generateFile(context)
-    if (csvFile != null) {
-        exportFinesToCSVFile(csvFile, fines)
-        Toast.makeText(
-            context, context.resources.getString(R.string.file_generated),
-            Toast.LENGTH_LONG
-        ).show()
-        val intent = goToFileIntent(context, csvFile)
-        startActivity(context, intent, null)
-    } else {
+    if (fines.isEmpty()) {
         Toast.makeText(
             context,
-            context.resources.getString(R.string.file_not_generated),
+            context.resources.getString(R.string.file_empty),
             Toast.LENGTH_LONG
         ).show()
+    } else {
+        val csvFile = generateFile(context)
+        if (csvFile != null) {
+            exportFinesToCSVFile(csvFile, fines)
+            Toast.makeText(
+                context, context.resources.getString(R.string.file_generated),
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(context, goToFileIntent(context, csvFile), null)
+        } else {
+            Toast.makeText(
+                context,
+                context.resources.getString(R.string.file_not_generated),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }
 
 private fun generateFile(context: Context): File? {
     val csvFile = File(context.filesDir, "ValidatedFines.csv")
     csvFile.createNewFile()
-
-    return if (csvFile.exists()) {
-        csvFile
-    } else {
-        null
-    }
+    return if (csvFile.exists()) csvFile else null
 }
 
 private fun goToFileIntent(context: Context, file: File): Intent {

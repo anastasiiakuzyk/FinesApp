@@ -75,6 +75,7 @@
 
     <string name="file_not_generated">File not generated</string>
     <string name="file_generated">File generated!</string>
+    <string name="file_empty">No fines to export, please validate fines!</string>
 
     <string-array name="colors_array">
         <item>White ◻</item>
