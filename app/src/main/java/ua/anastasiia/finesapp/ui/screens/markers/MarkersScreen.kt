@@ -32,7 +32,7 @@ fun MarkersScreen(
 
     val geocoder = Geocoder(LocalContext.current, Locale.getDefault());
     homeUiState.fineList.forEach { fine ->
-        val addressList = geocoder.getFromLocationName(fine.fine.location, 1);
+        val addressList = geocoder.getFromLocationName(fine.location, 1);
         val address = addressList?.get(0)
         markers.add(MarkerWithPrice(LatLng(address!!.latitude, address.longitude), fine.violations.sumOf { it.price }))
     }

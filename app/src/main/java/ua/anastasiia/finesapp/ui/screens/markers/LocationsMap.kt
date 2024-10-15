@@ -2,7 +2,7 @@ package ua.anastasiia.finesapp.ui.screens.markers
 
 import android.Manifest
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,12 +19,14 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.maps.android.compose.*
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerInfoWindowContent
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import ua.anastasiia.finesapp.MainActivity
 import ua.anastasiia.finesapp.R
-import ua.anastasiia.finesapp.ui.screens.home.HomeUiState
-
 
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)

@@ -8,11 +8,12 @@ import androidx.core.content.FileProvider
 import java.io.File
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import ua.anastasiia.finesapp.R
-import ua.anastasiia.finesapp.data.FineWithCarAndViolations
+import ua.anastasiia.finesapp.entity.Fine
+import ua.anastasiia.finesapp.ui.screens.FineUIDetails
 
 fun exportDatabaseToCSVFile(
     context: Context,
-    fines: List<FineWithCarAndViolations>
+    fines: List<FineUIDetails>
 ) {
     if (fines.isEmpty()) {
         Toast.makeText(
@@ -55,7 +56,7 @@ private fun goToFileIntent(context: Context, file: File): Intent {
     return intent
 }
 
-private fun exportFinesToCSVFile(csvFile: File, fines: List<FineWithCarAndViolations>) {
+private fun exportFinesToCSVFile(csvFile: File, fines: List<FineUIDetails>) {
     csvWriter().open(csvFile, append = false) {
         // Header
         writeRow(
@@ -75,12 +76,12 @@ private fun exportFinesToCSVFile(csvFile: File, fines: List<FineWithCarAndViolat
             writeRow(
                 listOf(
                     index,
-                    fine.fine.date,
-                    fine.fine.location,
-                    fine.carInfo.plate,
-                    fine.carInfo.make,
-                    fine.carInfo.model,
-                    fine.carInfo.color,
+                    fine.date,
+                    fine.location,
+                    fine.plate,
+                    fine.make,
+                    fine.model,
+                    fine.color,
                     fine.violations.joinToString(", ", transform = { it.description }),
                     fine.violations.sumOf { it.price }
                 )
