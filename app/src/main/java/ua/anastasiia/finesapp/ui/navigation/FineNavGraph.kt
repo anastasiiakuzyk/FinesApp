@@ -9,12 +9,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import ua.anastasiia.finesapp.ui.screens.fine_entry.FineEntryDestination
-import ua.anastasiia.finesapp.ui.screens.fine_details.FineDetailsDestination
-import ua.anastasiia.finesapp.ui.screens.fine_details.FineDetailsScreen
-import ua.anastasiia.finesapp.ui.screens.fine_edit.FineEditDestination
-import ua.anastasiia.finesapp.ui.screens.fine_edit.FineEditScreen
-import ua.anastasiia.finesapp.ui.screens.fine_entry.FineEntryScreen
+import ua.anastasiia.finesapp.ui.screens.fine.entry.FineEntryDestination
+import ua.anastasiia.finesapp.ui.screens.fine.details.FineDetailsDestination
+import ua.anastasiia.finesapp.ui.screens.fine.details.FineDetailsScreen
+import ua.anastasiia.finesapp.ui.screens.fine.edit.FineEditDestination
+import ua.anastasiia.finesapp.ui.screens.fine.edit.FineEditScreen
+import ua.anastasiia.finesapp.ui.screens.fine.entry.FineEntryScreen
 import ua.anastasiia.finesapp.ui.screens.markers.MarkersDestination
 import ua.anastasiia.finesapp.ui.screens.markers.MarkersScreen
 
@@ -34,8 +34,8 @@ fun FineNavHost(
         composable(route = HomeDestination.route) {
             HomeScreen(
                 navigateToFineEntry = { navController.navigate(FineEntryDestination.route) },
-                navigateToFineUpdate = {
-                    navController.navigate("${FineDetailsDestination.route}/${it}")
+                navigateToFineUpdate = { fineId, carPlate ->
+                    navController.navigate("${FineDetailsDestination.route}/$carPlate/$fineId")
                 },
                 navigateToMarkers = {
                     navController.navigate(MarkersDestination.route)
@@ -57,20 +57,32 @@ fun FineNavHost(
         }
         composable(
             route = FineDetailsDestination.routeWithArgs,
-            arguments = listOf(navArgument(FineDetailsDestination.fineIdArg) {
-                type = NavType.IntType
-            })
+            arguments = listOf(
+                navArgument(FineDetailsDestination.CAR_PLATE_ARG) {
+                    type = NavType.StringType
+                },
+                navArgument(FineDetailsDestination.TRAFFIC_ID_ARG) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             FineDetailsScreen(
-                navigateToEditFine = { navController.navigate("${FineEditDestination.route}/$it") },
+                navigateToEditFine = { fineId, carPlate ->
+                    navController.navigate("${FineEditDestination.route}/$carPlate/$fineId")
+                },
                 navigateBack = { navController.navigateUp() }
             )
         }
         composable(
             route = FineEditDestination.routeWithArgs,
-            arguments = listOf(navArgument(FineEditDestination.fineIdArg) {
-                type = NavType.IntType
-            })
+            arguments = listOf(
+                navArgument(FineEditDestination.CAR_PLATE_ARG) {
+                    type = NavType.StringType
+                },
+                navArgument(FineEditDestination.TRAFFIC_ID_ARG) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             FineEditScreen(
                 navigateBack = { navController.popBackStack() },

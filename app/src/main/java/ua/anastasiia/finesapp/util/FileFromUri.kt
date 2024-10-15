@@ -1,14 +1,11 @@
 package ua.anastasiia.finesapp.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.UUID
 
 fun Context.getFileFromUri(uri: Uri): File {
     val file = File(this.filesDir, UUID.randomUUID().toString() + ".jpg")

@@ -2,14 +2,10 @@ package ua.anastasiia.finesapp.photo.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import android.provider.Settings
-import android.provider.Telephony.Mms.Part.FILENAME
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
@@ -42,7 +38,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,8 +45,6 @@ import kotlinx.coroutines.launch
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.util.Permission
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -65,7 +58,6 @@ fun CameraCapture(
     modifier: Modifier = Modifier,
     cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA,
     onImageFile: (File) -> Unit = { }
-//    onImageFile: (Uri) -> Unit = { }
 ) {
     val context = LocalContext.current
     Permission(permission = Manifest.permission.CAMERA,
@@ -102,32 +94,6 @@ fun CameraCapture(
                     .align(Alignment.BottomCenter),
                     onClick = {
                         coroutineScope.launch {
-
-//                            // Create time stamped name and MediaStore entry.
-//                            val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-//                                .format(System.currentTimeMillis())
-//                            val contentValues = ContentValues().apply {
-//                                put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-//                                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-//                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-//                                    put(
-//                                        MediaStore.Images.Media.RELATIVE_PATH,
-//                                        "Pictures/ParkingFines"
-//                                    )
-//                                }
-//                            }
-//                            Log.e("contentValues", contentValues.toString())
-//
-//                            // Create output options object which contains file + metadata
-//                            val externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//                            val outputFileOptions = ImageCapture.OutputFileOptions
-//                                .Builder(
-//                                    context.contentResolver,
-//                                    externalContentUri,
-//                                    contentValues
-//                                )
-//                                .build()
-
                             val file = File(
                                 context.externalMediaDirs.first(),
                                 "${System.currentTimeMillis()}.jpg"
@@ -135,23 +101,16 @@ fun CameraCapture(
 
                             val outputFileOptions = OutputFileOptions.Builder(file).build()
 
-//                            Log.e("externalContentUri", externalContentUri.toString())
                             Log.e("outputFileOptions", outputFileOptions.file.toString())
                             imageCaptureUseCase.takePicture(outputFileOptions,
                                 context.executor,
                                 object : ImageCapture.OnImageSavedCallback {
                                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-//                                        val savedUri = outputFileResults.savedUri
-//                                        val savedFile = outputFileOptions.file
-//                                        savedUri?.let { onImageFile(File(it.path)) }
                                         onImageFile(file)
-//                                        savedFile?.let { onImageFile(it) }
-//                                        onImageFile(file)
                                         val savedUri = Uri.fromFile(file)
 
                                         val msg =
                                             "${context.resources.getString(R.string.photoCaptureSucceeded)}: $savedUri"
-//                                        val msg = "Photo capture succeeded: $savedFile"
                                         Log.d("imageuri", savedUri.toString())
                                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                                     }

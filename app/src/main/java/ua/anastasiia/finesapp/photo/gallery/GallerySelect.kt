@@ -7,7 +7,11 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import ua.anastasiia.finesapp.util.Permission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import ua.anastasiia.finesapp.ui.screens.fine_entry.EMPTY_IMAGE_URI
 import ua.anastasiia.finesapp.R
+import ua.anastasiia.finesapp.ui.screens.fine.entry.EMPTY_IMAGE_URI
+import ua.anastasiia.finesapp.util.Permission
 
 @ExperimentalPermissionsApi
 @Composable

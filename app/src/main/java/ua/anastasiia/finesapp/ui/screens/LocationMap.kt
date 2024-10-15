@@ -2,9 +2,7 @@ package ua.anastasiia.finesapp.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.location.Address
-import android.location.Geocoder
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,16 +20,19 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.*
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerInfoWindowContent
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.tasks.await
 import ua.anastasiia.finesapp.MainActivity
 import ua.anastasiia.finesapp.R
-import ua.anastasiia.finesapp.ui.screens.fine_entry.FineViewModel
+import ua.anastasiia.finesapp.ui.screens.fine.entry.FineViewModel
+import ua.anastasiia.finesapp.util.GeocoderUtil
 import ua.anastasiia.finesapp.util.isLocationValid
-import java.util.Locale
 
-
-@SuppressLint("MissingPermission")
-@Suppress("DEPRECATION")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationMap(
@@ -50,36 +51,32 @@ fun LocationMap(
     }
 
     val context = LocalContext.current
+
     var deviceLatLng by remember {
         mutableStateOf(LatLng(0.0, 0.0))
     }
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(deviceLatLng, 18f)
     }
 
-    remember { LocationServices.getFusedLocationProviderClient(context) }.lastLocation.addOnCompleteListener(
-        context as MainActivity
-    ) { task ->
-        if (task.isSuccessful) {
-            deviceLatLng = LatLng(task.result!!.latitude, task.result!!.longitude)
-            val geocoder = Geocoder(context, Locale.getDefault())
-            var addresses: List<Address>?
-            addresses = geocoder.getFromLocation(
-                deviceLatLng.latitude, deviceLatLng.longitude, 1
-            )
-            val addressLine: String = addresses!![0].getAddressLine(0)
+    LaunchedEffect(context) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        val locationResult = fusedLocationClient.lastLocation.await()
+        if (locationResult != null) {
+            deviceLatLng = LatLng(locationResult.latitude, locationResult.longitude)
+            val addressLine = GeocoderUtil.getAddressFromLatLng(context, deviceLatLng.latitude, deviceLatLng.longitude)
             isLocationValid = true
             if (location.isNotBlank().and(location.isNotEmpty())) {
-                addresses = geocoder.getFromLocationName(location, 1)
-                if (!addresses.isNullOrEmpty()) {
-                    val address = addresses[0]
-                    deviceLatLng = LatLng(address.latitude, address.longitude)
-                }else{
+                val newLatLng = GeocoderUtil.getLatLngFromAddress(context, location)
+                if (newLatLng != null) {
+                    deviceLatLng = newLatLng
+                } else {
                     isLocationValid = false
                 }
             }
 
-            viewModel.updateLocation(addressLine)
+            viewModel.updateLocation(addressLine ?: "", deviceLatLng.latitude, deviceLatLng.longitude)
             cameraPositionState.position = CameraPosition.fromLatLngZoom(deviceLatLng, 15f)
         }
     }

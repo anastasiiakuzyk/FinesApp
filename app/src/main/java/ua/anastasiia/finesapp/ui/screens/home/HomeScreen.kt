@@ -26,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,8 +42,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import ua.anastasiia.finesapp.R
-import ua.anastasiia.finesapp.data.FineWithCarAndViolations
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
+import ua.anastasiia.finesapp.ui.screens.FineUIDetails
 import ua.anastasiia.finesapp.ui.screens.FinesTopAppBar
 import ua.anastasiia.finesapp.ui.theme.Teal100
 import ua.anastasiia.finesapp.util.exportDatabaseToCSVFile
@@ -59,12 +60,20 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToFineEntry: () -> Unit,
     navigateToMarkers: () -> Unit,
-    navigateToFineUpdate: (Int) -> Unit,
+    navigateToFineUpdate: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.setContext(context)
+    }
+
     val homeUiState by viewModel.homeUiState.collectAsState()
     val homeValidatedUiState by viewModel.homeValidatedUiState.collectAsState()
+
     Scaffold(
         topBar = {
             FinesTopAppBar(
@@ -84,7 +93,6 @@ fun HomeScreen(
             }
         },
         bottomBar = {
-            val context = LocalContext.current
             Button(
                 onClick = {
                     exportDatabaseToCSVFile(context = context, homeValidatedUiState.fineList)
@@ -105,8 +113,8 @@ fun HomeScreen(
 
 @Composable
 private fun HomeBody(
-    fineList: List<FineWithCarAndViolations>,
-    onFineClick: (Int) -> Unit,
+    fineList: List<FineUIDetails>,
+    onFineClick: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -121,19 +129,19 @@ private fun HomeBody(
                 style = MaterialTheme.typography.subtitle2
             )
         } else {
-            FineList(fineList = fineList, onFineClick = { onFineClick(it.fine.fine_id) })
+            FineList(fineList = fineList, onFineClick = { fine -> onFineClick(fine.fineId, fine.carId) })
         }
     }
 }
 
 @Composable
 private fun FineList(
-    fineList: List<FineWithCarAndViolations>,
-    onFineClick: (FineWithCarAndViolations) -> Unit,
+    fineList: List<FineUIDetails>,
+    onFineClick: (FineUIDetails) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = fineList, key = { it.fine.fine_id }) { fine ->
+        items(items = fineList, key = { it.fineId }) { fine ->
             Fine(fine = fine, onFineClick = onFineClick)
             Divider()
         }
@@ -143,11 +151,11 @@ private fun FineList(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun Fine(
-    fine: FineWithCarAndViolations, onFineClick: (FineWithCarAndViolations) -> Unit
+    fine: FineUIDetails, onFineClick: (FineUIDetails) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
-        backgroundColor = if (fine.fine.valid) Teal100 else Color.White
+        backgroundColor = if (fine.valid) Teal100 else Color.White
     ) {
         Row(verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -161,13 +169,13 @@ private fun Fine(
                     .size(100.dp)
                     .clip(CircleShape)
                     .border(width = 2.dp, color = Color.Black, shape = CircleShape),
-                painter = rememberImagePainter(fine.fine.imageUri),
+                painter = rememberImagePainter(fine.imageUri),
                 contentDescription = stringResource(R.string.captured_image),
                 contentScale = ContentScale.Crop
             )
 
             Text(
-                text = fine.carInfo.plate, fontWeight = FontWeight.Bold
+                text = fine.carId, fontWeight = FontWeight.Bold
             )
             Text(
                 text = "${fine.violations.sumOf { it.price }}${stringResource(R.string.currency)}"
