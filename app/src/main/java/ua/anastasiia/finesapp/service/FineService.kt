@@ -1,20 +1,30 @@
 package ua.anastasiia.finesapp.service
 
+import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.core.net.toFile
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import ua.anastasiia.finesapp.entity.Fine
 import ua.anastasiia.finesapp.rest.dto.request.RestRequest
 import ua.anastasiia.finesapp.rest.dto.request.TrafficTicketRequest
 import ua.anastasiia.finesapp.rest.dto.response.FineResponse
 import ua.anastasiia.finesapp.rest.mapper.toRequest
 import ua.anastasiia.finesapp.ui.screens.FineUIDetails
 import ua.anastasiia.finesapp.ui.screens.toCreateFine
+import java.io.File
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 class FineService @Inject constructor(
@@ -87,13 +97,47 @@ class FineService @Inject constructor(
         }
     }
 
+    @SuppressLint("NewApi")
     suspend fun saveFine(fineUIDetails: FineUIDetails): FineResponse {
+        val toCreateFine: Fine = fineUIDetails.toCreateFine()
+        val file = Uri.parse(toCreateFine.trafficTicket.photoUrl).toFile()
+        val key = toCreateFine.car.plate.replace(
+            " ",
+            "_"
+        ) + "_" + LocalDateTime.parse(toCreateFine.trafficTicket.dateTime).toInstant(ZoneOffset.UTC)
+            .toEpochMilli() + ".jpg"
+        uploadImage(file, key)
+        val fine = toCreateFine.copy(
+            trafficTicket = toCreateFine.trafficTicket.copy(
+                photoUrl = S3_BUCKET.plus("/$key")
+            )
+        )
         return withContext(Dispatchers.IO) {
             val request = createRequest(
-                request = fineUIDetails.toCreateFine().toRequest(), url = "/fines", method = "POST"
+                request = fine.toRequest(), url = "/fines", method = "POST"
             )
             val response = executeRequest(request)
             gson.fromJson(response.body?.string(), FineResponse::class.java)
+        }
+    }
+
+    suspend fun uploadImage(file: File, key: String): String {
+        return withContext(Dispatchers.IO) {
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(
+                    "file",
+                    file.name,
+                    file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                )
+                .build()
+
+            val request = Request.Builder()
+                .url("$SERVER_BASE_URL/photo/upload/key/$key")
+                .post(requestBody)
+                .build()
+            val response = executeRequest(request)
+            response.body?.string() ?: ""
         }
     }
 
@@ -125,5 +169,6 @@ class FineService @Inject constructor(
 
     companion object {
         private const val SERVER_BASE_URL = "http://10.0.2.2:8085"
+        const val S3_BUCKET = "http://10.0.2.2:4566/fine-car-images"
     }
 }

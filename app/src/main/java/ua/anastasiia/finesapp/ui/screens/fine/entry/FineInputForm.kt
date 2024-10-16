@@ -1,5 +1,8 @@
 package ua.anastasiia.finesapp.ui.screens.fine.entry
 
+import android.content.Context
+import android.net.Uri
+import java.io.File
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
@@ -34,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -139,12 +143,19 @@ fun FineInputForm(
                 } else {
                     var showGallerySelect by remember { mutableStateOf(false) }
                     if (showGallerySelect) {
-                        GallerySelect(modifier = modifier, onImageUri = { uri ->
-                            showGallerySelect = false
-                            imageUri = uri
-                            Log.d("imageUriG", imageUri.toString())
-                            carViewModel.getResultsFromFile(context.getFileFromUri(imageUri))
-                        })
+                        GallerySelect(
+                            modifier = modifier,
+                            onImageUri = { uri ->
+                                val savedFile: File? = saveUriContentToFile(context, uri)
+                                if (savedFile != null) {
+
+                                    imageUri = savedFile.toUri()
+                                    carViewModel.getResultsFromFile(savedFile)
+
+                                    onValueChange(fineUIDetails.copy(imageUri = imageUri))
+                                }
+                            }
+                        )
                     } else {
                         Box(modifier = modifier) {
                             CameraCapture(
@@ -152,6 +163,7 @@ fun FineInputForm(
                                 onImageFile = { file ->
                                     imageUri = file.toUri()
                                     carViewModel.getResultsFromFile(context.getFileFromUri(imageUri))
+                                    onValueChange(fineUIDetails.copy(imageUri = imageUri))
                                 })
                             Button(modifier = Modifier
                                 .align(Alignment.TopEnd)
@@ -314,7 +326,7 @@ fun FineInputForm(
 
                 Image(
                     modifier = Modifier.size(400.dp),
-                    painter = rememberImagePainter(if (isCreateMode) imageUri else fineUIDetails.imageUri),
+                    painter = rememberAsyncImagePainter(if (isCreateMode) imageUri else fineUIDetails.imageUri),
                     contentDescription = stringResource(R.string.captured_image),
                     contentScale = ContentScale.FillWidth
                 )
@@ -387,3 +399,22 @@ fun FineInputForm(
     }
 }
 
+
+fun saveUriContentToFile(context: Context, contentUri: Uri): File? {
+    val contentResolver = context.contentResolver
+    val fileName = "${System.currentTimeMillis()}.jpg"
+    val file = File(context.cacheDir, fileName)
+    file.createNewFile()
+
+    try {
+        contentResolver.openInputStream(contentUri)?.use { inputStream ->
+            file.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+        return file
+    } catch (e: Exception) {
+        Log.e("saveUriContentToFile", "Error copying content to file", e)
+        return null
+    }
+}

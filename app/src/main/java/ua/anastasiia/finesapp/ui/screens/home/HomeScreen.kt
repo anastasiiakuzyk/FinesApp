@@ -40,7 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import ua.anastasiia.finesapp.R
 import ua.anastasiia.finesapp.ui.navigation.NavigationDestination
 import ua.anastasiia.finesapp.ui.screens.FineUIDetails
@@ -169,7 +169,7 @@ private fun Fine(
                     .size(100.dp)
                     .clip(CircleShape)
                     .border(width = 2.dp, color = Color.Black, shape = CircleShape),
-                painter = rememberImagePainter(fine.imageUri),
+                painter = rememberAsyncImagePainter(fine.imageUri),
                 contentDescription = stringResource(R.string.captured_image),
                 contentScale = ContentScale.Crop
             )
