@@ -112,6 +112,7 @@ class FineService @Inject constructor(
                 photoUrl = S3_BUCKET.plus("/$key")
             )
         )
+
         return withContext(Dispatchers.IO) {
             val request = createRequest(
                 request = fine.toRequest(), url = "/fines", method = "POST"
@@ -169,6 +170,6 @@ class FineService @Inject constructor(
 
     companion object {
         private const val SERVER_BASE_URL = "http://10.0.2.2:8085"
-        const val S3_BUCKET = "http://10.0.2.2:4566/fine-car-images"
+        const val S3_BUCKET = "http://localhost:4566/fine-car-images"
     }
 }

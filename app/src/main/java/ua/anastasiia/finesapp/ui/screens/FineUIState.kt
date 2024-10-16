@@ -69,7 +69,7 @@ fun FineUIDetails.toCreateFine(): Fine {
             locationLat = latitude,
             locationLon = longitude,
             dateTime = parsedDate,
-            photoUrl = imageUri.toString(),
+            photoUrl = imageUri.toString().replace("10.0.2.2", "localhost"),
             violations = violations,
             valid = valid
         )
@@ -90,7 +90,7 @@ fun FineUIDetails.toUpdateFine(): Fine {
             locationLat = latitude,
             locationLon = longitude,
             dateTime = date,
-            photoUrl = imageUri.toString(),
+            photoUrl = imageUri.toString().replace("10.0.2.2", "localhost"),
             violations = violations,
             valid = valid
         )
@@ -107,7 +107,7 @@ suspend fun Fine.toFineUIDetails(context: Context): FineUIDetails {
         latitude = trafficTicket.locationLat,
         longitude = trafficTicket.locationLon,
         date = trafficTicket.dateTime,
-        imageUri = Uri.parse(trafficTicket.photoUrl),
+        imageUri = Uri.parse(trafficTicket.photoUrl.replace("localhost", "10.0.2.2")),
         valid = trafficTicket.valid,
         violations = trafficTicket.violations,
         sum = trafficTicket.violations.sumOf { it.price },
